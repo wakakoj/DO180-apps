@@ -1,0 +1,57 @@
+Cloning "https://github.com/wakakoj/DO180-apps" ...
+	Commit:	f7cd8963ef353d9173c3a21dcccf402f3616840b (Initial commit, including all apps previously in course)
+	Author:	Jordi Sola <someth2say@gmail.com>
+	Date:	Fri Oct 4 13:04:03 2019 +0200
+Caching blobs under "/var/cache/blobs".
+Getting image source signatures
+Copying blob sha256:3811c17826fed41d93a6e6bcfb6a048828f5f72e3032bb61e8f7cd0785995bfc
+Copying blob sha256:f8ad07fb64db5c19bae13caae02f330216cdc4d7f144cdf47b5637819870eadd
+Copying blob sha256:58ef20b02aca8ea0795927176625aef3850209d126949927908234c97bc3c2c4
+Copying blob sha256:2b63304f1869b42027cc113af46692a963e05ef7867c88d36ef9c75ffc2fdfc7
+Copying blob sha256:d518f7038c56d881774a7a29c5eb0c5dab9a9c5223a989b818ec4f2ca864867c
+Copying config sha256:47186c4751c37cf7b6021c36fc8a17ca5dfeeb40b2bf782a1a6129d43aabe487
+Writing manifest to image destination
+Storing signatures
+Generating dockerfile with builder image image-registry.openshift-image-registry.svc:5000/openshift/php@sha256:4173a6d7361c1d5d1154b0d24580c4abd2954c9116b9f91e79f297689e9fd9f9
+STEP 1: FROM image-registry.openshift-image-registry.svc:5000/openshift/php@sha256:4173a6d7361c1d5d1154b0d24580c4abd2954c9116b9f91e79f297689e9fd9f9
+STEP 2: LABEL "io.openshift.build.commit.author"="Jordi Sola <someth2say@gmail.com>"       "io.openshift.build.commit.date"="Fri Oct 4 13:04:03 2019 +0200"       "io.openshift.build.commit.id"="f7cd8963ef353d9173c3a21dcccf402f3616840b"       "io.openshift.build.commit.ref"="s2i"       "io.openshift.build.commit.message"="Initial commit, including all apps previously in course"       "io.openshift.build.source-location"="https://github.com/wakakoj/DO180-apps"       "io.openshift.build.source-context-dir"="php-helloworld"       "io.openshift.build.image"="image-registry.openshift-image-registry.svc:5000/openshift/php@sha256:4173a6d7361c1d5d1154b0d24580c4abd2954c9116b9f91e79f297689e9fd9f9"
+STEP 3: ENV OPENSHIFT_BUILD_NAME="php-helloworld-1"     OPENSHIFT_BUILD_NAMESPACE="wakakoj-jp-s2i"     OPENSHIFT_BUILD_SOURCE="https://github.com/wakakoj/DO180-apps"     OPENSHIFT_BUILD_REFERENCE="s2i"     OPENSHIFT_BUILD_COMMIT="f7cd8963ef353d9173c3a21dcccf402f3616840b"
+STEP 4: USER root
+STEP 5: COPY upload/src /tmp/src
+STEP 6: RUN chown -R 1001:0 /tmp/src
+STEP 7: USER 1001
+STEP 8: RUN /usr/libexec/s2i/assemble
+---> Installing application source...
+=> sourcing 20-copy-config.sh ...
+---> 07:34:12     Processing additional arbitrary httpd configuration provided by s2i ...
+=> sourcing 00-documentroot.conf ...
+=> sourcing 50-mpm-tuning.conf ...
+=> sourcing 40-ssl-certs.sh ...
+STEP 9: CMD /usr/libexec/s2i/run
+STEP 10: COMMIT temp.builder.openshift.io/wakakoj-jp-s2i/php-helloworld-1:b3262054
+Getting image source signatures
+Copying blob sha256:1bdfedf126f0037cb8ed6b6f06f329492d1049d629f1d31dc7ba2d17010dea2d
+Copying blob sha256:b545558594f3e5e5e4ef3335bd145938cd471b8bc77497d02ea0d22da2a6c3ee
+Copying blob sha256:9f8a253a7475bf2051c441a77a096f341bcc01f2e2df6077449b392a27898932
+Copying blob sha256:6af478d2ff9903d89e17aa6fdd62ac32af3d29107d1f11be3a00fcb6ddba067c
+Copying blob sha256:5f5596bbdb8c5d63f568ccaa57f9e114566945e3753b380ae06351f5a4530f35
+Copying blob sha256:867593bf6b58cec74d2b2d8f8b119c5c95bb104d8476c6f8567190370e0a599e
+Copying config sha256:f6e46743c82359ff87a809c34e6cf48430bf695551b95c5aa5db11254d866790
+Writing manifest to image destination
+Storing signatures
+--> f6e46743c82
+f6e46743c82359ff87a809c34e6cf48430bf695551b95c5aa5db11254d866790
+
+Pushing image image-registry.openshift-image-registry.svc:5000/wakakoj-jp-s2i/php-helloworld:latest ...
+Getting image source signatures
+Copying blob sha256:867593bf6b58cec74d2b2d8f8b119c5c95bb104d8476c6f8567190370e0a599e
+Copying blob sha256:3811c17826fed41d93a6e6bcfb6a048828f5f72e3032bb61e8f7cd0785995bfc
+Copying blob sha256:f8ad07fb64db5c19bae13caae02f330216cdc4d7f144cdf47b5637819870eadd
+Copying blob sha256:d518f7038c56d881774a7a29c5eb0c5dab9a9c5223a989b818ec4f2ca864867c
+Copying blob sha256:2b63304f1869b42027cc113af46692a963e05ef7867c88d36ef9c75ffc2fdfc7
+Copying blob sha256:58ef20b02aca8ea0795927176625aef3850209d126949927908234c97bc3c2c4
+Copying config sha256:f6e46743c82359ff87a809c34e6cf48430bf695551b95c5aa5db11254d866790
+Writing manifest to image destination
+Storing signatures
+Successfully pushed image-registry.openshift-image-registry.svc:5000/wakakoj-jp-s2i/php-helloworld@sha256:92c47208bd1280bb5189f3e79fff2377c68d1bca84933b1db5f6be97012b6dc0
+Push successful
