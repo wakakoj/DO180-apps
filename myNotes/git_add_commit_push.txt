@@ -1,0 +1,53 @@
+[student@workstation ~]$ cd DO180-apps/
+[student@workstation DO180-apps]$ ls
+example  nodejs-app         php-helloworld  temps
+myNotes  nodejs-helloworld  README.md       todoapp
+[student@workstation DO180-apps]$ cd myNotes/
+[student@workstation myNotes]$ ls
+a                               htpasswd_01_20210526.txt
+authentication_20210521_01.txt  htpasswd_02_20210526.txt
+curl_out_20210512.txt           instoducing_storage_class_20210511.txt
+exposing_ssl_20210512_01.txt
+[student@workstation myNotes]$ vi oc_login_EOF.txt
+[student@workstation myNotes]$ git add oc_login_EOF.txt 
+[student@workstation myNotes]$ git push -u origin myNotesDO280
+Username for 'https://github.com': wakakoj
+Password for 'https://wakakoj@github.com': 
+remote: Invalid username or password.
+fatal: Authentication failed for 'https://github.com/wakakoj/DO180-apps/'
+[student@workstation myNotes]$ git push -u origin myNotesDO280
+Username for 'https://github.com': wakakoj
+Password for 'https://wakakoj@github.com': 
+Branch 'myNotesDO280' set up to track remote branch 'myNotesDO280' from 'origin'.
+Everything up-to-date
+[student@workstation myNotes]$ git commit -a -m "Commit myNotes folder"
+[myNotesDO280 6b181b1] Commit myNotes folder
+ Committer: Student User <student@workstation.lab.example.com>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 1 file changed, 26 insertions(+)
+ create mode 100644 myNotes/oc_login_EOF.txt
+[student@workstation myNotes]$ git push -u origin myNotesDO280
+Username for 'https://github.com': wakakoj
+Password for 'https://wakakoj@github.com': 
+Enumerating objects: 6, done.
+Counting objects: 100% (6/6), done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 730 bytes | 730.00 KiB/s, done.
+Total 4 (delta 2), reused 0 (delta 0)
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/wakakoj/DO180-apps
+   a8f6dad..6b181b1  myNotesDO280 -> myNotesDO280
+Branch 'myNotesDO280' set up to track remote branch 'myNotesDO280' from 'origin'
+
