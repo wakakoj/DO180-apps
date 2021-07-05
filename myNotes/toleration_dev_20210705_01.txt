@@ -1,0 +1,162 @@
+[student@workstation ~]$ oc login -u developer -p developer https://api.ocp4.example.com:6443
+Login successful.
+
+You have access to the following projects and can switch between them with 'oc project <projectname>':
+
+  * schedul-pods
+    schedule-pods-ts
+
+Using project "schedul-pods".
+[student@workstation ~]$ oc get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+hello-6c4984d949-gzhrv   1/1     Running   0          40m
+hello-6c4984d949-hc2rb   1/1     Running   0          40m
+hello-6c4984d949-htsrp   1/1     Running   0          40m
+[student@workstation ~]$ oc edit deployment/hello
+
+---
+spec:
+  tolerations:
+  - key: "key1"
+    operator: "Equal"        
+    value: "value1"   
+    effect: "NoExecute"   
+    tolerationSeconds: 600
+
+
+----
+oc edit
+after
+
+      tolerations:
+      - effect: NoExecute
+        key: key1
+        operator: Equal
+        tolerationSeconds: 600
+        value: value1
+status:
+
+[student@workstation ~]$ oc get pods  -o wide
+NAME                     READY   STATUS    RESTARTS   AGE     IP           NODE       NOMINATED NODE   READINESS GATES
+hello-77d9858bdc-q24s9   1/1     Running   0          3m40s   10.10.0.8    master01   <none>           <none>
+hello-77d9858bdc-qtr7b   1/1     Running   0          3m34s   10.10.0.10   master01   <none>           <none>
+hello-77d9858bdc-zr66v   1/1     Running   0          3m37s   10.10.0.9    master01   <none>           <none>
+
+
+
+---
+adm
+
+[student@workstation ~]$ oc login -u admin -p redhat https://api.ocp4.example.com:6443
+Login successful.
+
+You have access to 60 projects, the list has been suppressed. You can list all projects with 'oc projects'
+
+Using project "schedul-pods".
+[student@workstation ~]$ oc get node
+NAME       STATUS   ROLES           AGE    VERSION
+master01   Ready    master,worker   333d   v1.18.3+012b3ec
+master02   Ready    master,worker   333d   v1.18.3+012b3ec
+master03   Ready    master,worker   333d   v1.18.3+012b3ec
+[student@workstation ~]$ oc get node master01  -o yaml  |grep -A 3 -e taint -e tolerations
+        f:taints: {}
+    manager: oc
+    operation: Update
+    time: "2021-07-05T05:47:24Z"
+--
+  taints:
+  - effect: NoExecute
+    key: key1
+    value: value1
+[student@workstation ~]$ oc get node master02  -o yaml  |grep -A 3 -e taint -e tolerations
+        f:taints: {}
+    manager: oc
+    operation: Update
+    time: "2021-07-05T05:47:43Z"
+--
+  taints:
+  - effect: NoExecute
+    key: key1
+    value: value2
+[student@workstation ~]$ oc get node master03  -o yaml  |grep -A 3 -e taint -e tolerations
+[student@workstation ~]$ oc get node master03  -o yaml  |grep -A 3 -e taint -e tolerations^C
+(failed reverse-i-search)`oc taint': ^C get node master03  -o yaml  |grep -A 3 -e taint -e tolerations
+[student@workstation ~]$ oc adm taint nodes master02 key1=value1:NoExecute --overwrite
+node/master02 modified
+[student@workstation ~]$ oc get node master01  -o yaml  |grep -A 3 -e taint -e tolerations
+        f:taints: {}
+    manager: oc
+    operation: Update
+    time: "2021-07-05T05:47:24Z"
+--
+  taints:
+  - effect: NoExecute
+    key: key1
+    value: value1
+[student@workstation ~]$ oc adm taint nodes master02 key1=value1:NoExecute --overwrite^C
+[student@workstation ~]$ oc get node master02  -o yaml  |grep -A 3 -e taint -e tolerations
+        f:taints: {}
+    manager: oc
+    operation: Update
+    time: "2021-07-05T06:11:17Z"
+--
+  taints:
+  - effect: NoExecute
+    key: key1
+    value: value1
+[student@workstation ~]$ oc get node master03  -o yaml  |grep -A 3 -e taint -e tolerations
+[student@workstation ~]$ 
+
+
+----
+dev
+---
+[student@workstation ~]$ oc get pods  -o wide
+NAME                     READY   STATUS    RESTARTS   AGE     IP           NODE       NOMINATED NODE   READINESS GATES
+hello-77d9858bdc-q24s9   1/1     Running   0          3m17s   10.10.0.8    master01   <none>           <none>
+hello-77d9858bdc-qtr7b   1/1     Running   0          3m11s   10.10.0.10   master01   <none>           <none>
+hello-77d9858bdc-zr66v   1/1     Running   0          3m14s   10.10.0.9    master01   <none>           <none>
+[student@workstation ~]$ oc get pods  -o wide
+NAME                     READY   STATUS    RESTARTS   AGE     IP           NODE       NOMINATED NODE   READINESS GATES
+hello-77d9858bdc-q24s9   1/1     Running   0          3m40s   10.10.0.8    master01   <none>           <none>
+hello-77d9858bdc-qtr7b   1/1     Running   0          3m34s   10.10.0.10   master01   <none>           <none>
+hello-77d9858bdc-zr66v   1/1     Running   0          3m37s   10.10.0.9    master01   <none>           <none>
+[student@workstation ~]$ oc get pods  -o wide
+NAME                     READY   STATUS    RESTARTS   AGE     IP           NODE       NOMINATED NODE   READINESS GATES
+hello-77d9858bdc-q24s9   1/1     Running   0          9m13s   10.10.0.8    master01   <none>           <none>
+hello-77d9858bdc-qtr7b   1/1     Running   0          9m7s    10.10.0.10   master01   <none>           <none>
+hello-77d9858bdc-zr66v   1/1     Running   0          9m10s   10.10.0.9    master01   <none>           <none>
+[student@workstation ~]$ oc edit deployment/hello
+Edit cancelled, no changes made.
+[student@workstation ~]$ oc edit deployment/hello
+deployment.apps/hello edited
+[student@workstation ~]$ oc get pods  -o wide
+NAME                     READY   STATUS              RESTARTS   AGE   IP           NODE       NOMINATED NODE   READINESS GATES
+hello-77d9858bdc-br2q6   1/1     Running             0          30s   10.8.0.38    master02   <none>           <none>
+hello-77d9858bdc-dz5gz   1/1     Running             0          33s   10.8.0.37    master02   <none>           <none>
+hello-77d9858bdc-zgdq7   0/1     Terminating         0          27s   10.10.0.11   master01   <none>           <none>
+hello-7ccd8d95c4-bb7th   1/1     Running             0          4s    10.10.0.12   master01   <none>           <none>
+hello-7ccd8d95c4-bwg7l   0/1     ContainerCreating   0          1s    <none>       master01   <none>           <none>
+[student@workstation ~]$ oc get pods  -o wide
+NAME                     READY   STATUS    RESTARTS   AGE   IP           NODE       NOMINATED NODE   READINESS GATES
+hello-7ccd8d95c4-49hjf   1/1     Running   0          14s   10.8.0.39    master02   <none>           <none>
+hello-7ccd8d95c4-bb7th   1/1     Running   0          20s   10.10.0.12   master01   <none>           <none>
+hello-7ccd8d95c4-bwg7l   1/1     Running   0          17s   10.10.0.13   master01   <none>           <none>
+
+
+--
+finish
+---
+[student@workstation ~]$ oc adm taint nodes master01 key1-
+node/master01 untainted
+[student@workstation ~]$ oc adm taint nodes master02 key1-
+node/master02 untainted
+[student@workstation ~]$ oc adm taint nodes master03 key1-
+error: taint "key1" not found
+[student@workstation ~]$ 
+
+[student@workstation ~]$ oc get node master01  -o yaml  |grep -A 3 -e taint -e tolerations
+[student@workstation ~]$ oc get node master02  -o yaml  |grep -A 3 -e taint -e tolerations
+[student@workstation ~]$ oc get node master03  -o yaml  |grep -A 3 -e taint -e tolerations
+[student@workstation ~]$ 
+
