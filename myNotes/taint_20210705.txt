@@ -1,0 +1,85 @@
+[student@workstation ~]$ oc login -u admin -p redhat https://api.ocp4.example.com:6443
+Login successful.
+
+You have access to 59 projects, the list has been suppressed. You can list all projects with 'oc projects'
+
+Using project "schedule-pods-ts".
+
+[student@workstation ~]$ oc get node
+NAME       STATUS   ROLES           AGE    VERSION
+master01   Ready    master,worker   333d   v1.18.3+012b3ec
+master02   Ready    master,worker   333d   v1.18.3+012b3ec
+master03   Ready    master,worker   333d   v1.18.3+012b3ec
+
+[student@workstation ~]$ oc get node master01  -o yaml  |grep -A 3 -e taint -e tolerations
+[student@workstation ~]$ oc adm taint nodes master01 key1=value1:NoExecute
+node/master01 tainted
+[student@workstation ~]$ oc get node master01  -o yaml  |grep -A 3 -e taint -e tolerations
+        f:taints: {}
+    manager: oc
+    operation: Update
+    time: "2021-07-05T02:59:05Z"
+--
+  taints:
+  - effect: NoExecute
+    key: key1
+    value: value1
+[student@workstation ~]$  
+
+
+[student@workstation ~]$ oc get pods -o wide
+NAME                     READY   STATUS    RESTARTS   AGE   IP          NODE       NOMINATED NODE   READINESS GATES
+hello-6c4984d949-qkwf5   1/1     Running   0          36s   10.8.0.34   master02   <none>           <none>
+[student@workstation ~]$ oc expose svc/hello
+route.route.openshift.io/hello exposed
+[student@workstation ~]$ oc scale --replicas 3 deployment/hello
+deployment.apps/hello scaled
+[student@workstation ~]$ oc get pods -o wide
+NAME                     READY   STATUS    RESTARTS   AGE     IP          NODE       NOMINATED NODE   READINESS GATES
+hello-6c4984d949-2g9mf   1/1     Running   0          7s      10.9.0.42   master03   <none>           <none>
+hello-6c4984d949-qkwf5   1/1     Running   0          2m19s   10.8.0.34   master02   <none>           <none>
+hello-6c4984d949-tkcz6   1/1     Running   0          7s      10.8.0.35   master02   <none>           <none>
+[student@workstation ~]$ oc get pods -o wide
+NAME                     READY   STATUS    RESTARTS   AGE   IP          NODE       NOMINATED NODE   READINESS GATES
+hello-6c4984d949-2g9mf   1/1     Running   0          15m   10.9.0.42   master03   <none>           <none>
+hello-6c4984d949-qkwf5   1/1     Running   0          18m   10.8.0.34   master02   <none>           <none>
+hello-6c4984d949-tkcz6   1/1     Running   0          15m   10.8.0.35   master02   <none>           <none>
+
+
+[student@workstation ~]$ oc login -u developer -p developer https://api.ocp4.example.com:6443
+Login successful.
+
+You have one project on this server: "schedule-pods-ts"
+
+Using project "schedule-pods-ts".
+[student@workstation ~]$ oc new-project schedul-pods
+Now using project "schedul-pods" on server "https://api.ocp4.example.com:6443".
+
+You can add applications to this project with the 'new-app' command. For example, try:
+
+    oc new-app ruby~https://github.com/sclorg/ruby-ex.git
+
+to build a new example application in Ruby. Or use kubectl to deploy a simple Kubernetes application:
+
+    kubectl create deployment hello-node --image=gcr.io/hello-minikube-zero-install/hello-node
+
+[student@workstation ~]$ oc new-app --name hello --docker-image quay.io/redhattraining/hello-world-nginx:v1.0
+--> Found container image 44eaa13 (2 years old) from quay.io for "quay.io/redhattraining/hello-world-nginx:v1.0"
+
+    Red Hat Universal Base Image 8 
+    ------------------------------ 
+    The Universal Base Image is designed and engineered to be the base layer for all of your containerized applications, middleware and utilities. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.
+
+    Tags: base rhel8
+
+    * An image stream tag will be created as "hello:v1.0" that will track this image
+
+--> Creating resources ...
+    imagestream.image.openshift.io "hello" created
+    deployment.apps "hello" created
+    service "hello" created
+--> Success
+    Application is not exposed. You can expose services to the outside world by executing one or more of the commands below:
+     'oc expose svc/hello' 
+    Run 'oc status' to view your app.
+
