@@ -1,0 +1,744 @@
+oc get node
+NAME       STATUS   ROLES           AGE    VERSION
+master01   Ready    master,worker   308d   v1.18.3+012b3ec
+master02   Ready    master,worker   308d   v1.18.3+012b3ec
+master03   Ready    master,worker   308d   v1.18.3+012b3ec
+
+oc describe node master01
+Name:               master01
+Roles:              master,worker
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/os=linux
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=master01
+                    kubernetes.io/os=linux
+                    node-role.kubernetes.io/master=
+                    node-role.kubernetes.io/worker=
+                    node.openshift.io/os_id=rhcos
+Annotations:        machineconfiguration.openshift.io/currentConfig: rendered-master-d8a74fe31566784caa9eb81cb1f0571e
+                    machineconfiguration.openshift.io/desiredConfig: rendered-master-d8a74fe31566784caa9eb81cb1f0571e
+                    machineconfiguration.openshift.io/reason: 
+                    machineconfiguration.openshift.io/state: Done
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Wed, 05 Aug 2020 14:23:06 -0400
+Taints:             <none>
+Unschedulable:      false
+Lease:
+  HolderIdentity:  master01
+  AcquireTime:     <unset>
+  RenewTime:       Thu, 10 Jun 2021 01:41:52 -0400
+Conditions:
+  Type             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
+  ----             ------  -----------------                 ------------------                ------                       -------
+  MemoryPressure   False   Thu, 10 Jun 2021 01:39:53 -0400   Wed, 26 May 2021 10:43:22 -0400   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure     False   Thu, 10 Jun 2021 01:39:53 -0400   Wed, 26 May 2021 10:43:22 -0400   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure      False   Thu, 10 Jun 2021 01:39:53 -0400   Wed, 26 May 2021 10:43:22 -0400   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready            True    Thu, 10 Jun 2021 01:39:53 -0400   Wed, 26 May 2021 10:43:22 -0400   KubeletReady                 kubelet is posting ready status
+Addresses:
+  InternalIP:  192.168.50.10
+  Hostname:    master01
+Capacity:
+  cpu:                4
+  ephemeral-storage:  41391084Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             16419132Ki
+  pods:               250
+Allocatable:
+  cpu:                3500m
+  ephemeral-storage:  37072281128
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             15268156Ki
+  pods:               250
+System Info:
+  Machine ID:                             8647fbfd86c5432aa6c9da08d596d4cc
+  System UUID:                            23a68af5-a532-4144-870e-353052dedbbe
+  Boot ID:                                c66661c1-9bb5-4502-9215-b1486aaf3a77
+  Kernel Version:                         4.18.0-193.13.2.el8_2.x86_64
+  OS Image:                               Red Hat Enterprise Linux CoreOS 45.82.202007240629-0 (Ootpa)
+  Operating System:                       linux
+  Architecture:                           amd64
+  Container Runtime Version:              cri-o://1.18.3-5.rhaos4.5.git1c13d1d.el8
+  Kubelet Version:                        v1.18.3+012b3ec
+  Kube-Proxy Version:                     v1.18.3+012b3ec
+PodCIDR:                                  10.8.1.0/24
+PodCIDRs:                                 10.8.1.0/24
+Non-terminated Pods:                      (25 in total)
+  Namespace                               Name                                       CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE
+  ---------                               ----                                       ------------  ----------  ---------------  -------------  ---
+  openshift-apiserver                     apiserver-59b6b7968c-pnc6c                 100m (2%)     0 (0%)      200Mi (1%)       0 (0%)         14d
+  openshift-cluster-node-tuning-operator  tuned-qjbhv                                10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         308d
+  openshift-cluster-storage-operator      csi-snapshot-controller-89c497f55-lnwwx    10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         11m
+  openshift-console                       console-5df4fcbb47-xlrr5                   10m (0%)      0 (0%)      100Mi (0%)       0 (0%)         8d
+  openshift-controller-manager            controller-manager-dx8nx                   100m (2%)     0 (0%)      100Mi (0%)       0 (0%)         84m
+  openshift-dns                           dns-default-tfhlc                          65m (1%)      0 (0%)      110Mi (0%)       512Mi (3%)     308d
+  openshift-etcd                          etcd-master01                              460m (13%)    0 (0%)      920Mi (6%)       0 (0%)         308d
+  openshift-image-registry                node-ca-qrrpd                              10m (0%)      0 (0%)      10Mi (0%)        0 (0%)         308d
+  openshift-kube-apiserver                kube-apiserver-master01                    330m (9%)     0 (0%)      1174Mi (7%)      0 (0%)         82m
+  openshift-kube-controller-manager       kube-controller-manager-master01           100m (2%)     0 (0%)      500Mi (3%)       0 (0%)         308d
+  openshift-kube-scheduler                openshift-kube-scheduler-master01          20m (0%)      0 (0%)      100Mi (0%)       0 (0%)         308d
+  openshift-machine-config-operator       etcd-quorum-guard-5fc4989788-lffjz         10m (0%)      0 (0%)      5Mi (0%)         0 (0%)         14d
+  openshift-machine-config-operator       machine-config-daemon-l4ftv                40m (1%)      0 (0%)      100Mi (0%)       0 (0%)         308d
+  openshift-machine-config-operator       machine-config-server-cn4cx                20m (0%)      0 (0%)      50Mi (0%)        0 (0%)         308d
+  openshift-marketplace                   certified-operators-6c9f5bf545-86vv6       10m (0%)      0 (0%)      100Mi (0%)       0 (0%)         11m
+  openshift-marketplace                   community-operators-5d469cf868-wzzgr       10m (0%)      0 (0%)      100Mi (0%)       0 (0%)         85m
+  openshift-marketplace                   redhat-marketplace-794f8749d7-7h6x4        10m (0%)      0 (0%)      100Mi (0%)       0 (0%)         11m
+  openshift-marketplace                   redhat-operators-6cbf5cf857-9tbc5          10m (0%)      0 (0%)      100Mi (0%)       0 (0%)         11m
+  openshift-monitoring                    node-exporter-7z66r                        9m (0%)       0 (0%)      210Mi (1%)       0 (0%)         308d
+  openshift-monitoring                    prometheus-adapter-7647cd59d5-4hkj4        1m (0%)       0 (0%)      25Mi (0%)        0 (0%)         84m
+  openshift-multus                        multus-admission-controller-plrpp          20m (0%)      0 (0%)      20Mi (0%)        0 (0%)         308d
+  openshift-multus                        multus-xpkf5                               10m (0%)      0 (0%)      150Mi (1%)       0 (0%)         308d
+  openshift-sdn                           ovs-7bzt6                                  100m (2%)     0 (0%)      400Mi (2%)       0 (0%)         308d
+  openshift-sdn                           sdn-controller-czjdg                       10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         308d
+  openshift-sdn                           sdn-xgl8z                                  100m (2%)     0 (0%)      200Mi (1%)       0 (0%)         308d
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests      Limits
+  --------           --------      ------
+  cpu                1575m (45%)   0 (0%)
+  memory             4924Mi (33%)  512Mi (3%)
+  ephemeral-storage  0 (0%)        0 (0%)
+  hugepages-1Gi      0 (0%)        0 (0%)
+  hugepages-2Mi      0 (0%)        0 (0%)
+Events:
+  Type     Reason                   Age                    From               Message
+  ----     ------                   ----                   ----               -------
+  Normal   NodeNotSchedulable       308d                   kubelet, master01  Node master01 status is now: NodeNotSchedulable
+  Normal   Starting                 308d                   kubelet, master01  Starting kubelet.
+  Normal   NodeReady                308d                   kubelet, master01  Node master01 status is now: NodeReady
+  Normal   NodeHasNoDiskPressure    308d (x2 over 308d)    kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     308d (x2 over 308d)    kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Warning  Rebooted                 308d                   kubelet, master01  Node master01 has been rebooted, boot id: 087a4978-52e9-4981-a3e4-9a640017b061
+  Normal   NodeNotReady             308d                   kubelet, master01  Node master01 status is now: NodeNotReady
+  Normal   NodeNotSchedulable       308d                   kubelet, master01  Node master01 status is now: NodeNotSchedulable
+  Normal   NodeHasSufficientMemory  308d (x2 over 308d)    kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeAllocatableEnforced  308d                   kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   NodeSchedulable          308d                   kubelet, master01  Node master01 status is now: NodeSchedulable
+  Normal   Starting                 30d                    kubelet, master01  Starting kubelet.
+  Normal   NodeHasSufficientMemory  30d (x8 over 30d)      kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    30d (x8 over 30d)      kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     30d (x7 over 30d)      kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  30d                    kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   NodeAllocatableEnforced  29d                    kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   Starting                 29d                    kubelet, master01  Starting kubelet.
+  Normal   NodeHasNoDiskPressure    29d (x8 over 29d)      kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     29d (x7 over 29d)      kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeHasSufficientMemory  29d (x8 over 29d)      kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   Starting                 29d                    kubelet, master01  Starting kubelet.
+  Normal   NodeHasSufficientMemory  29d (x8 over 29d)      kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    29d (x8 over 29d)      kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     29d (x7 over 29d)      kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  29d                    kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   NodeHasNoDiskPressure    29d (x8 over 29d)      kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientMemory  29d (x8 over 29d)      kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   Starting                 29d                    kubelet, master01  Starting kubelet.
+  Normal   NodeHasSufficientPID     29d (x7 over 29d)      kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  29d                    kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   Starting                 29d                    kubelet, master01  Starting kubelet.
+  Normal   NodeHasSufficientMemory  29d (x8 over 29d)      kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    29d (x8 over 29d)      kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     29d (x7 over 29d)      kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  29d                    kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   Starting                 28d                    kubelet, master01  Starting kubelet.
+  Normal   NodeHasSufficientMemory  28d (x8 over 28d)      kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    28d (x8 over 28d)      kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     28d (x7 over 28d)      kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  28d                    kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   Starting                 23d                    kubelet, master01  Starting kubelet.
+  Normal   NodeHasSufficientMemory  23d (x8 over 23d)      kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    23d (x8 over 23d)      kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     23d (x7 over 23d)      kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  23d                    kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   Starting                 23d                    kubelet, master01  Starting kubelet.
+  Normal   NodeHasSufficientMemory  23d (x7 over 23d)      kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    23d (x8 over 23d)      kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     23d (x8 over 23d)      kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  23d                    kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   Starting                 23d                    kubelet, master01  Starting kubelet.
+  Normal   NodeHasSufficientMemory  23d (x8 over 23d)      kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasSufficientPID     23d (x7 over 23d)      kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeHasNoDiskPressure    23d (x8 over 23d)      kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeAllocatableEnforced  23d                    kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   Starting                 21d                    kubelet, master01  Starting kubelet.
+  Normal   NodeHasSufficientMemory  21d (x8 over 21d)      kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    21d (x8 over 21d)      kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     21d (x7 over 21d)      kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  21d                    kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   Starting                 20d                    kubelet, master01  Starting kubelet.
+  Normal   NodeHasSufficientMemory  20d (x8 over 20d)      kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    20d (x8 over 20d)      kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     20d (x7 over 20d)      kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  20d                    kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   NodeAllocatableEnforced  19d                    kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   NodeHasSufficientMemory  19d (x8 over 19d)      kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    19d (x8 over 19d)      kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     19d (x7 over 19d)      kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   Starting                 19d                    kubelet, master01  Starting kubelet.
+  Normal   NodeHasSufficientMemory  16d (x8 over 16d)      kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    16d (x7 over 16d)      kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     16d (x8 over 16d)      kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  16d                    kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   Starting                 16d                    kubelet, master01  Starting kubelet.
+  Normal   Starting                 14d                    kubelet, master01  Starting kubelet.
+  Normal   NodeHasNoDiskPressure    14d (x8 over 14d)      kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientMemory  14d (x8 over 14d)      kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasSufficientPID     14d (x7 over 14d)      kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  14d                    kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   NodeNotSchedulable       14d                    kubelet, master01  Node master01 status is now: NodeNotSchedulable
+  Normal   NodeReady                14d                    kubelet, master01  Node master01 status is now: NodeReady
+  Normal   NodeHasSufficientMemory  14d (x2 over 14d)      kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    14d (x2 over 14d)      kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     14d (x2 over 14d)      kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   Starting                 14d                    kubelet, master01  Starting kubelet.
+  Normal   NodeNotReady             14d                    kubelet, master01  Node master01 status is now: NodeNotReady
+  Normal   NodeNotSchedulable       14d                    kubelet, master01  Node master01 status is now: NodeNotSchedulable
+  Normal   NodeAllocatableEnforced  14d                    kubelet, master01  Updated Node Allocatable limit across pods
+  Warning  Rebooted                 14d                    kubelet, master01  Node master01 has been rebooted, boot id: e97a57d8-d5a5-437f-8606-c1c4160e01ff
+  Normal   NodeSchedulable          14d                    kubelet, master01  Node master01 status is now: NodeSchedulable
+  Normal   Starting                 9d                     kubelet, master01  Starting kubelet.
+  Normal   NodeHasSufficientMemory  9d (x8 over 9d)        kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    9d (x8 over 9d)        kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     9d (x7 over 9d)        kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  9d                     kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   Starting                 9d                     kubelet, master01  Starting kubelet.
+  Normal   NodeHasSufficientMemory  9d (x8 over 9d)        kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    9d (x7 over 9d)        kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     9d (x8 over 9d)        kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  9d                     kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   NodeHasSufficientMemory  9d (x8 over 9d)        kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    9d (x8 over 9d)        kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     9d (x7 over 9d)        kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  9d                     kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   Starting                 9d                     kubelet, master01  Starting kubelet.
+  Normal   NodeAllocatableEnforced  8d                     kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   Starting                 8d                     kubelet, master01  Starting kubelet.
+  Normal   NodeHasSufficientMemory  8d (x8 over 8d)        kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasSufficientPID     8d (x7 over 8d)        kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeHasNoDiskPressure    8d (x8 over 8d)        kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   Starting                 8d                     kubelet, master01  Starting kubelet.
+  Normal   NodeHasSufficientMemory  8d (x8 over 8d)        kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    8d (x8 over 8d)        kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     8d (x7 over 8d)        kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  8d                     kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   Starting                 2d15h                  kubelet, master01  Starting kubelet.
+  Normal   NodeHasSufficientMemory  2d15h (x8 over 2d15h)  kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    2d15h (x8 over 2d15h)  kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     2d15h (x7 over 2d15h)  kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  2d15h                  kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   Starting                 87m                    kubelet, master01  Starting kubelet.
+  Normal   NodeHasSufficientMemory  87m (x8 over 87m)      kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeAllocatableEnforced  87m                    kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   NodeHasSufficientPID     87m (x7 over 87m)      kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+  Normal   NodeHasNoDiskPressure    87m (x8 over 87m)      kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   Starting                 12m                    kubelet, master01  Starting kubelet.
+  Normal   NodeAllocatableEnforced  12m                    kubelet, master01  Updated Node Allocatable limit across pods
+  Normal   NodeHasSufficientMemory  12m (x8 over 12m)      kubelet, master01  Node master01 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    12m (x7 over 12m)      kubelet, master01  Node master01 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     12m (x8 over 12m)      kubelet, master01  Node master01 status is now: NodeHasSufficientPID
+
+oc describe node master02
+Name:               master02
+Roles:              master,worker
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/os=linux
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=master02
+                    kubernetes.io/os=linux
+                    node-role.kubernetes.io/master=
+                    node-role.kubernetes.io/worker=
+                    node.openshift.io/os_id=rhcos
+Annotations:        machineconfiguration.openshift.io/currentConfig: rendered-master-d8a74fe31566784caa9eb81cb1f0571e
+                    machineconfiguration.openshift.io/desiredConfig: rendered-master-d8a74fe31566784caa9eb81cb1f0571e
+                    machineconfiguration.openshift.io/reason: 
+                    machineconfiguration.openshift.io/state: Done
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Wed, 05 Aug 2020 14:23:07 -0400
+Taints:             <none>
+Unschedulable:      false
+Lease:
+  HolderIdentity:  master02
+  AcquireTime:     <unset>
+  RenewTime:       Thu, 10 Jun 2021 01:42:32 -0400
+Conditions:
+  Type             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
+  ----             ------  -----------------                 ------------------                ------                       -------
+  MemoryPressure   False   Thu, 10 Jun 2021 01:39:54 -0400   Wed, 05 Aug 2020 14:23:07 -0400   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure     False   Thu, 10 Jun 2021 01:39:54 -0400   Wed, 05 Aug 2020 14:23:07 -0400   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure      False   Thu, 10 Jun 2021 01:39:54 -0400   Wed, 05 Aug 2020 14:23:07 -0400   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready            True    Thu, 10 Jun 2021 01:39:54 -0400   Wed, 26 May 2021 10:35:43 -0400   KubeletReady                 kubelet is posting ready status
+Addresses:
+  InternalIP:  192.168.50.11
+  Hostname:    master02
+Capacity:
+  cpu:                4
+  ephemeral-storage:  41391084Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             16419116Ki
+  pods:               250
+Allocatable:
+  cpu:                3500m
+  ephemeral-storage:  37072281128
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             15268140Ki
+  pods:               250
+System Info:
+  Machine ID:                                 f35fcd252197440994b4c2fdfe4dc18b
+  System UUID:                                4c36e4b1-6a17-44a0-b5ac-38d5df989bab
+  Boot ID:                                    cbb12d23-b891-4a97-ac80-b1c7ddec4216
+  Kernel Version:                             4.18.0-193.13.2.el8_2.x86_64
+  OS Image:                                   Red Hat Enterprise Linux CoreOS 45.82.202007240629-0 (Ootpa)
+  Operating System:                           linux
+  Architecture:                               amd64
+  Container Runtime Version:                  cri-o://1.18.3-5.rhaos4.5.git1c13d1d.el8
+  Kubelet Version:                            v1.18.3+012b3ec
+  Kube-Proxy Version:                         v1.18.3+012b3ec
+PodCIDR:                                      10.8.2.0/24
+PodCIDRs:                                     10.8.2.0/24
+Non-terminated Pods:                          (40 in total)
+  Namespace                                   Name                                                 CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE
+  ---------                                   ----                                                 ------------  ----------  ---------------  -------------  ---
+  openshift-apiserver                         apiserver-59b6b7968c-xqbmx                           100m (2%)     0 (0%)      200Mi (1%)       0 (0%)         14d
+  openshift-authentication                    oauth-openshift-6fd65b6864-l98qc                     10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         2d15h
+  openshift-cloud-credential-operator         cloud-credential-operator-5bf8fb79db-tdws4           10m (0%)      0 (0%)      150Mi (1%)       0 (0%)         14d
+  openshift-cluster-node-tuning-operator      tuned-qkldf                                          10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         308d
+  openshift-cluster-storage-operator          csi-snapshot-controller-operator-6f9d5b4bfc-b2bzb    10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         14d
+  openshift-console                           console-5df4fcbb47-fmb59                             10m (0%)      0 (0%)      100Mi (0%)       0 (0%)         14d
+  openshift-console                           downloads-5565cdb86b-svtfz                           10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         14d
+  openshift-controller-manager                controller-manager-frkj4                             100m (2%)     0 (0%)      100Mi (0%)       0 (0%)         85m
+  openshift-dns                               dns-default-2xd7r                                    65m (1%)      0 (0%)      110Mi (0%)       512Mi (3%)     308d
+  openshift-etcd-operator                     etcd-operator-fcd9d5cb7-lwqp4                        10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         14d
+  openshift-etcd                              etcd-master02                                        460m (13%)    0 (0%)      920Mi (6%)       0 (0%)         308d
+  openshift-image-registry                    image-registry-64b69c4bf9-kngrs                      100m (2%)     0 (0%)      256Mi (1%)       0 (0%)         14d
+  openshift-image-registry                    node-ca-24k9d                                        10m (0%)      0 (0%)      10Mi (0%)        0 (0%)         308d
+  openshift-ingress                           router-default-57575dc57c-t9z67                      100m (2%)     0 (0%)      256Mi (1%)       0 (0%)         14d
+  openshift-kube-apiserver-operator           kube-apiserver-operator-595f668595-tkg4h             10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         14d
+  openshift-kube-apiserver                    kube-apiserver-master02                              330m (9%)     0 (0%)      1174Mi (7%)      0 (0%)         81m
+  openshift-kube-controller-manager-operator  kube-controller-manager-operator-5658d865f7-dqwmz    10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         14d
+  openshift-kube-controller-manager           kube-controller-manager-master02                     100m (2%)     0 (0%)      500Mi (3%)       0 (0%)         308d
+  openshift-kube-scheduler                    openshift-kube-scheduler-master02                    20m (0%)      0 (0%)      100Mi (0%)       0 (0%)         308d
+  openshift-kube-storage-version-migrator     migrator-84d87c7d77-d8m7c                            100m (2%)     0 (0%)      200Mi (1%)       0 (0%)         14d
+  openshift-machine-config-operator           etcd-quorum-guard-5fc4989788-hxg6j                   10m (0%)      0 (0%)      5Mi (0%)         0 (0%)         14d
+  openshift-machine-config-operator           machine-config-daemon-grvz8                          40m (1%)      0 (0%)      100Mi (0%)       0 (0%)         308d
+  openshift-machine-config-operator           machine-config-operator-5b87d8f4c5-9n598             20m (0%)      0 (0%)      50Mi (0%)        0 (0%)         14d
+  openshift-machine-config-operator           machine-config-server-l7j5v                          20m (0%)      0 (0%)      50Mi (0%)        0 (0%)         308d
+  openshift-monitoring                        alertmanager-main-2                                  8m (0%)       0 (0%)      260Mi (1%)       0 (0%)         14d
+  openshift-monitoring                        grafana-68bbfbdf97-bqzk9                             5m (0%)       0 (0%)      120Mi (0%)       0 (0%)         14d
+  openshift-monitoring                        node-exporter-dgnw4                                  9m (0%)       0 (0%)      210Mi (1%)       0 (0%)         308d
+  openshift-monitoring                        prometheus-k8s-1                                     76m (2%)      0 (0%)      1184Mi (7%)      0 (0%)         14d
+  openshift-monitoring                        thanos-querier-6c89f5cff9-zbzwj                      8m (0%)       0 (0%)      72Mi (0%)        0 (0%)         14d
+  openshift-multus                            multus-admission-controller-9vdv5                    20m (0%)      0 (0%)      20Mi (0%)        0 (0%)         308d
+  openshift-multus                            multus-gfckl                                         10m (0%)      0 (0%)      150Mi (1%)       0 (0%)         308d
+  openshift-network-operator                  network-operator-6bd8b9b698-zxm28                    10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         14d
+  openshift-operator-lifecycle-manager        catalog-operator-5d4588db56-gk697                    10m (0%)      0 (0%)      80Mi (0%)        0 (0%)         14d
+  openshift-operator-lifecycle-manager        olm-operator-7d9844479b-fhgzp                        10m (0%)      0 (0%)      160Mi (1%)       0 (0%)         14d
+  openshift-operator-lifecycle-manager        packageserver-6464db4fd7-8rdn5                       0 (0%)        0 (0%)      0 (0%)           0 (0%)         12m
+  openshift-sdn                               ovs-5wjk8                                            100m (2%)     0 (0%)      400Mi (2%)       0 (0%)         308d
+  openshift-sdn                               sdn-8c298                                            100m (2%)     0 (0%)      200Mi (1%)       0 (0%)         308d
+  openshift-sdn                               sdn-controller-tfmgq                                 10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         308d
+  openshift-service-ca-operator               service-ca-operator-5f596775f8-jsmsb                 10m (0%)      0 (0%)      80Mi (0%)        0 (0%)         14d
+  openshift-service-ca                        service-ca-8b8db557b-r25th                           10m (0%)      0 (0%)      120Mi (0%)       0 (0%)         14d
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests      Limits
+  --------           --------      ------
+  cpu                2061m (58%)   0 (0%)
+  memory             7787Mi (52%)  512Mi (3%)
+  ephemeral-storage  0 (0%)        0 (0%)
+  hugepages-1Gi      0 (0%)        0 (0%)
+  hugepages-2Mi      0 (0%)        0 (0%)
+Events:
+  Type     Reason                   Age                    From               Message
+  ----     ------                   ----                   ----               -------
+  Normal   NodeNotSchedulable       308d                   kubelet, master02  Node master02 status is now: NodeNotSchedulable
+  Warning  Rebooted                 308d                   kubelet, master02  Node master02 has been rebooted, boot id: 80cce970-fc55-454b-80b8-9dbb36873c86
+  Normal   Starting                 308d                   kubelet, master02  Starting kubelet.
+  Normal   NodeHasNoDiskPressure    308d                   kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     308d                   kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  308d                   kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   NodeNotSchedulable       308d                   kubelet, master02  Node master02 status is now: NodeNotSchedulable
+  Normal   NodeHasSufficientMemory  308d                   kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeSchedulable          308d                   kubelet, master02  Node master02 status is now: NodeSchedulable
+  Normal   Starting                 30d                    kubelet, master02  Starting kubelet.
+  Normal   NodeHasSufficientMemory  30d (x8 over 30d)      kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    30d (x7 over 30d)      kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     30d (x8 over 30d)      kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  30d                    kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   Starting                 29d                    kubelet, master02  Starting kubelet.
+  Normal   NodeHasSufficientMemory  29d (x8 over 29d)      kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    29d (x8 over 29d)      kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeAllocatableEnforced  29d                    kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   NodeHasSufficientPID     29d (x7 over 29d)      kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   Starting                 29d                    kubelet, master02  Starting kubelet.
+  Normal   NodeAllocatableEnforced  29d                    kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   NodeHasNoDiskPressure    29d (x8 over 29d)      kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     29d (x7 over 29d)      kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeHasSufficientMemory  29d (x8 over 29d)      kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeAllocatableEnforced  29d                    kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   Starting                 29d                    kubelet, master02  Starting kubelet.
+  Normal   NodeHasSufficientMemory  29d (x8 over 29d)      kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeHasSufficientPID     29d (x7 over 29d)      kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeHasNoDiskPressure    29d (x8 over 29d)      kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   Starting                 29d                    kubelet, master02  Starting kubelet.
+  Normal   NodeHasSufficientMemory  29d (x8 over 29d)      kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    29d (x7 over 29d)      kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     29d (x8 over 29d)      kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  29d                    kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   NodeAllocatableEnforced  28d                    kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   NodeHasSufficientMemory  28d (x8 over 28d)      kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    28d (x8 over 28d)      kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     28d (x7 over 28d)      kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   Starting                 28d                    kubelet, master02  Starting kubelet.
+  Normal   Starting                 23d                    kubelet, master02  Starting kubelet.
+  Normal   NodeHasSufficientMemory  23d (x8 over 23d)      kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    23d (x8 over 23d)      kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     23d (x7 over 23d)      kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  23d                    kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   Starting                 23d                    kubelet, master02  Starting kubelet.
+  Normal   NodeHasSufficientMemory  23d (x8 over 23d)      kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    23d (x8 over 23d)      kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     23d (x7 over 23d)      kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  23d                    kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   Starting                 23d                    kubelet, master02  Starting kubelet.
+  Normal   NodeAllocatableEnforced  23d                    kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   NodeHasNoDiskPressure    23d (x7 over 23d)      kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     23d (x8 over 23d)      kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeHasSufficientMemory  23d (x8 over 23d)      kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   Starting                 21d                    kubelet, master02  Starting kubelet.
+  Normal   NodeHasSufficientMemory  21d (x8 over 21d)      kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    21d (x8 over 21d)      kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     21d (x7 over 21d)      kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  21d                    kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   Starting                 20d                    kubelet, master02  Starting kubelet.
+  Normal   NodeHasSufficientMemory  20d (x8 over 20d)      kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    20d (x8 over 20d)      kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     20d (x7 over 20d)      kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  20d                    kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   Starting                 19d                    kubelet, master02  Starting kubelet.
+  Normal   NodeAllocatableEnforced  19d                    kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   NodeHasNoDiskPressure    19d (x8 over 19d)      kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     19d (x7 over 19d)      kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeHasSufficientMemory  19d (x8 over 19d)      kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   Starting                 16d                    kubelet, master02  Starting kubelet.
+  Normal   NodeAllocatableEnforced  16d                    kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   NodeHasNoDiskPressure    16d (x8 over 16d)      kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     16d (x7 over 16d)      kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeHasSufficientMemory  16d (x8 over 16d)      kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    14d (x7 over 14d)      kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   Starting                 14d                    kubelet, master02  Starting kubelet.
+  Normal   NodeHasSufficientMemory  14d (x8 over 14d)      kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeHasSufficientPID     14d (x8 over 14d)      kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  14d                    kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   NodeNotSchedulable       14d                    kubelet, master02  Node master02 status is now: NodeNotSchedulable
+  Normal   Starting                 14d                    kubelet, master02  Starting kubelet.
+  Normal   NodeReady                14d                    kubelet, master02  Node master02 status is now: NodeReady
+  Normal   NodeHasNoDiskPressure    14d                    kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     14d                    kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeHasSufficientMemory  14d                    kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeNotReady             14d                    kubelet, master02  Node master02 status is now: NodeNotReady
+  Normal   NodeNotSchedulable       14d                    kubelet, master02  Node master02 status is now: NodeNotSchedulable
+  Normal   NodeAllocatableEnforced  14d                    kubelet, master02  Updated Node Allocatable limit across pods
+  Warning  Rebooted                 14d                    kubelet, master02  Node master02 has been rebooted, boot id: 9a8af82a-eb1c-4084-9b07-e12b97f4efaf
+  Normal   NodeSchedulable          14d                    kubelet, master02  Node master02 status is now: NodeSchedulable
+  Normal   Starting                 9d                     kubelet, master02  Starting kubelet.
+  Normal   NodeHasSufficientMemory  9d (x8 over 9d)        kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    9d (x8 over 9d)        kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     9d (x7 over 9d)        kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  9d                     kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   Starting                 9d                     kubelet, master02  Starting kubelet.
+  Normal   NodeHasSufficientMemory  9d (x8 over 9d)        kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    9d (x8 over 9d)        kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     9d (x7 over 9d)        kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  9d                     kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   NodeHasSufficientMemory  9d (x8 over 9d)        kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    9d (x8 over 9d)        kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     9d (x7 over 9d)        kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  9d                     kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   Starting                 9d                     kubelet, master02  Starting kubelet.
+  Normal   Starting                 8d                     kubelet, master02  Starting kubelet.
+  Normal   NodeAllocatableEnforced  8d                     kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   NodeHasSufficientMemory  8d (x8 over 8d)        kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeHasSufficientPID     8d (x7 over 8d)        kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeHasNoDiskPressure    8d (x8 over 8d)        kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   Starting                 8d                     kubelet, master02  Starting kubelet.
+  Normal   NodeAllocatableEnforced  8d                     kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   NodeHasSufficientMemory  8d (x8 over 8d)        kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    8d (x7 over 8d)        kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     8d (x8 over 8d)        kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  2d15h                  kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   NodeHasSufficientMemory  2d15h (x8 over 2d15h)  kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    2d15h (x8 over 2d15h)  kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     2d15h (x7 over 2d15h)  kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   Starting                 2d15h                  kubelet, master02  Starting kubelet.
+  Normal   Starting                 87m                    kubelet, master02  Starting kubelet.
+  Normal   NodeHasSufficientMemory  87m (x8 over 87m)      kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeHasSufficientPID     87m (x8 over 87m)      kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  87m                    kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   NodeHasNoDiskPressure    87m (x7 over 87m)      kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeAllocatableEnforced  13m                    kubelet, master02  Updated Node Allocatable limit across pods
+  Normal   Starting                 13m                    kubelet, master02  Starting kubelet.
+  Normal   NodeHasSufficientMemory  13m (x8 over 13m)      kubelet, master02  Node master02 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    13m (x8 over 13m)      kubelet, master02  Node master02 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     13m (x7 over 13m)      kubelet, master02  Node master02 status is now: NodeHasSufficientPID
+
+oc describe node master03
+Name:               master03
+Roles:              master,worker
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/os=linux
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=master03
+                    kubernetes.io/os=linux
+                    node-role.kubernetes.io/master=
+                    node-role.kubernetes.io/worker=
+                    node.openshift.io/os_id=rhcos
+Annotations:        machineconfiguration.openshift.io/currentConfig: rendered-master-d8a74fe31566784caa9eb81cb1f0571e
+                    machineconfiguration.openshift.io/desiredConfig: rendered-master-d8a74fe31566784caa9eb81cb1f0571e
+                    machineconfiguration.openshift.io/reason: 
+                    machineconfiguration.openshift.io/state: Done
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Wed, 05 Aug 2020 14:23:05 -0400
+Taints:             <none>
+Unschedulable:      false
+Lease:
+  HolderIdentity:  master03
+  AcquireTime:     <unset>
+  RenewTime:       Thu, 10 Jun 2021 01:44:52 -0400
+Conditions:
+  Type             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
+  ----             ------  -----------------                 ------------------                ------                       -------
+  MemoryPressure   False   Thu, 10 Jun 2021 01:39:55 -0400   Wed, 26 May 2021 10:32:49 -0400   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure     False   Thu, 10 Jun 2021 01:39:55 -0400   Wed, 26 May 2021 10:32:49 -0400   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure      False   Thu, 10 Jun 2021 01:39:55 -0400   Wed, 26 May 2021 10:32:49 -0400   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready            True    Thu, 10 Jun 2021 01:39:55 -0400   Wed, 26 May 2021 10:32:49 -0400   KubeletReady                 kubelet is posting ready status
+Addresses:
+  InternalIP:  192.168.50.12
+  Hostname:    master03
+Capacity:
+  cpu:                4
+  ephemeral-storage:  41391084Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             16419132Ki
+  pods:               250
+Allocatable:
+  cpu:                3500m
+  ephemeral-storage:  37072281128
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             15268156Ki
+  pods:               250
+System Info:
+  Machine ID:                                       7d67e93680e34224a6a231b4e06d127d
+  System UUID:                                      fedf87b7-a6e3-4b3c-8546-4e51eca7796c
+  Boot ID:                                          95107c56-52a0-46a2-88c5-aa4cfb53c708
+  Kernel Version:                                   4.18.0-193.13.2.el8_2.x86_64
+  OS Image:                                         Red Hat Enterprise Linux CoreOS 45.82.202007240629-0 (Ootpa)
+  Operating System:                                 linux
+  Architecture:                                     amd64
+  Container Runtime Version:                        cri-o://1.18.3-5.rhaos4.5.git1c13d1d.el8
+  Kubelet Version:                                  v1.18.3+012b3ec
+  Kube-Proxy Version:                               v1.18.3+012b3ec
+PodCIDR:                                            10.8.0.0/24
+PodCIDRs:                                           10.8.0.0/24
+Non-terminated Pods:                                (53 in total)
+  Namespace                                         Name                                                     CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE
+  ---------                                         ----                                                     ------------  ----------  ---------------  -------------  ---
+  nfs-client-provisioner                            nfs-client-provisioner-744894f8bf-z6vz4                  0 (0%)        0 (0%)      0 (0%)           0 (0%)         14d
+  openshift-apiserver-operator                      openshift-apiserver-operator-76887d86f6-hlcls            10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         14d
+  openshift-apiserver                               apiserver-59b6b7968c-fmcxl                               100m (2%)     0 (0%)      200Mi (1%)       0 (0%)         14d
+  openshift-authentication-operator                 authentication-operator-6c959749cb-n7nmw                 10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         14d
+  openshift-authentication                          oauth-openshift-6fd65b6864-sbdcl                         10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         2d15h
+  openshift-cluster-machine-approver                machine-approver-85bcb94899-xkkhm                        20m (0%)      0 (0%)      70Mi (0%)        0 (0%)         14d
+  openshift-cluster-node-tuning-operator            cluster-node-tuning-operator-76587db447-6wj8j            10m (0%)      0 (0%)      20Mi (0%)        0 (0%)         14d
+  openshift-cluster-node-tuning-operator            tuned-x69cv                                              10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         308d
+  openshift-cluster-samples-operator                cluster-samples-operator-665dfb69bf-zdjdk                20m (0%)      0 (0%)      0 (0%)           0 (0%)         14d
+  openshift-cluster-storage-operator                cluster-storage-operator-f65bf87d8-lq2q5                 10m (0%)      0 (0%)      20Mi (0%)        0 (0%)         14d
+  openshift-cluster-version                         cluster-version-operator-664469d7c5-9p74d                20m (0%)      0 (0%)      50Mi (0%)        0 (0%)         14d
+  openshift-config-operator                         openshift-config-operator-78bf96dddb-lfnpf               10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         14d
+  openshift-console-operator                        console-operator-5877c747c4-vf94p                        10m (0%)      0 (0%)      100Mi (0%)       0 (0%)         14d
+  openshift-console                                 downloads-5565cdb86b-42s9d                               10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         14d
+  openshift-controller-manager-operator             openshift-controller-manager-operator-877d8845b-szv25    10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         14d
+  openshift-controller-manager                      controller-manager-wdcwz                                 100m (2%)     0 (0%)      100Mi (0%)       0 (0%)         87m
+  openshift-dns-operator                            dns-operator-746bbc44b5-hbfn2                            20m (0%)      0 (0%)      40Mi (0%)        0 (0%)         14d
+  openshift-dns                                     dns-default-7skhs                                        65m (1%)      0 (0%)      110Mi (0%)       512Mi (3%)     308d
+  openshift-etcd                                    etcd-master03                                            460m (13%)    0 (0%)      920Mi (6%)       0 (0%)         308d
+  openshift-image-registry                          cluster-image-registry-operator-5f47f6fcf7-kw7sh         20m (0%)      0 (0%)      0 (0%)           0 (0%)         14d
+  openshift-image-registry                          node-ca-lfh4z                                            10m (0%)      0 (0%)      10Mi (0%)        0 (0%)         308d
+  openshift-ingress-operator                        ingress-operator-59944c47b9-xx9fs                        20m (0%)      0 (0%)      40Mi (0%)        0 (0%)         14d
+  openshift-ingress                                 router-default-57575dc57c-g5x45                          100m (2%)     0 (0%)      256Mi (1%)       0 (0%)         14d
+  openshift-insights                                insights-operator-658bb9b944-7hpft                       10m (0%)      0 (0%)      30Mi (0%)        0 (0%)         14d
+  openshift-kube-apiserver                          kube-apiserver-master03                                  330m (9%)     0 (0%)      1174Mi (7%)      0 (0%)         87m
+  openshift-kube-controller-manager                 kube-controller-manager-master03                         100m (2%)     0 (0%)      500Mi (3%)       0 (0%)         308d
+  openshift-kube-scheduler-operator                 openshift-kube-scheduler-operator-855c69bdcf-7s425       0 (0%)        0 (0%)      50Mi (0%)        0 (0%)         14d
+  openshift-kube-scheduler                          openshift-kube-scheduler-master03                        20m (0%)      0 (0%)      100Mi (0%)       0 (0%)         308d
+  openshift-kube-storage-version-migrator-operator  kube-storage-version-migrator-operator-dfbfb5b5-nrtn4    10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         14d
+  openshift-machine-api                             cluster-autoscaler-operator-d5698d448-7gstk              30m (0%)      0 (0%)      70Mi (0%)        0 (0%)         14d
+  openshift-machine-api                             machine-api-operator-67986c596-w9xhj                     20m (0%)      0 (0%)      70Mi (0%)        0 (0%)         14d
+  openshift-machine-config-operator                 etcd-quorum-guard-5fc4989788-4vf56                       10m (0%)      0 (0%)      5Mi (0%)         0 (0%)         14d
+  openshift-machine-config-operator                 machine-config-controller-67b8b87bb8-8j6n7               20m (0%)      0 (0%)      50Mi (0%)        0 (0%)         14d
+  openshift-machine-config-operator                 machine-config-daemon-2ctxr                              40m (1%)      0 (0%)      100Mi (0%)       0 (0%)         308d
+  openshift-machine-config-operator                 machine-config-server-t88vv                              20m (0%)      0 (0%)      50Mi (0%)        0 (0%)         308d
+  openshift-marketplace                             community-operators-667f6fd464-xltsq                     10m (0%)      0 (0%)      100Mi (0%)       0 (0%)         14m
+  openshift-marketplace                             marketplace-operator-df484cccc-fd54h                     10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         14d
+  openshift-monitoring                              alertmanager-main-0                                      8m (0%)       0 (0%)      260Mi (1%)       0 (0%)         14d
+  openshift-monitoring                              alertmanager-main-1                                      8m (0%)       0 (0%)      260Mi (1%)       0 (0%)         14d
+  openshift-monitoring                              cluster-monitoring-operator-9c998b65b-9mcf5              11m (0%)      0 (0%)      70Mi (0%)        0 (0%)         14d
+  openshift-monitoring                              kube-state-metrics-7b6ccf5cc5-xbns8                      4m (0%)       0 (0%)      120Mi (0%)       0 (0%)         14d
+  openshift-monitoring                              node-exporter-9xcks                                      9m (0%)       0 (0%)      210Mi (1%)       0 (0%)         308d
+  openshift-monitoring                              openshift-state-metrics-9f97df6b7-rfcmr                  3m (0%)       0 (0%)      190Mi (1%)       0 (0%)         14d
+  openshift-monitoring                              prometheus-adapter-7647cd59d5-kjwbt                      1m (0%)       0 (0%)      25Mi (0%)        0 (0%)         87m
+  openshift-monitoring                              prometheus-k8s-0                                         76m (2%)      0 (0%)      1184Mi (7%)      0 (0%)         14d
+  openshift-monitoring                              prometheus-operator-9f7877d6f-sqwp5                      6m (0%)       0 (0%)      100Mi (0%)       0 (0%)         14d
+  openshift-monitoring                              thanos-querier-6c89f5cff9-hbqvz                          8m (0%)       0 (0%)      72Mi (0%)        0 (0%)         14d
+  openshift-multus                                  multus-admission-controller-46x82                        20m (0%)      0 (0%)      20Mi (0%)        0 (0%)         308d
+  openshift-multus                                  multus-jvxtt                                             10m (0%)      0 (0%)      150Mi (1%)       0 (0%)         308d
+  openshift-operator-lifecycle-manager              packageserver-6464db4fd7-vk8xs                           0 (0%)        0 (0%)      0 (0%)           0 (0%)         14m
+  openshift-sdn                                     ovs-dg9vm                                                100m (2%)     0 (0%)      400Mi (2%)       0 (0%)         308d
+  openshift-sdn                                     sdn-controller-k4ght                                     10m (0%)      0 (0%)      50Mi (0%)        0 (0%)         308d
+  openshift-sdn                                     sdn-qxxzl                                                100m (2%)     0 (0%)      200Mi (1%)       0 (0%)         308d
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests      Limits
+  --------           --------      ------
+  cpu                2059m (58%)   0 (0%)
+  memory             7996Mi (53%)  512Mi (3%)
+  ephemeral-storage  0 (0%)        0 (0%)
+  hugepages-1Gi      0 (0%)        0 (0%)
+  hugepages-2Mi      0 (0%)        0 (0%)
+Events:
+  Type     Reason                   Age                    From               Message
+  ----     ------                   ----                   ----               -------
+  Normal   NodeNotSchedulable       308d                   kubelet, master03  Node master03 status is now: NodeNotSchedulable
+  Normal   NodeReady                308d                   kubelet, master03  Node master03 status is now: NodeReady
+  Normal   NodeHasSufficientMemory  308d                   kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    308d                   kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     308d                   kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Warning  Rebooted                 308d                   kubelet, master03  Node master03 has been rebooted, boot id: 3d2f976b-d669-418c-aead-5184dc91909e
+  Normal   NodeNotReady             308d                   kubelet, master03  Node master03 status is now: NodeNotReady
+  Normal   Starting                 308d                   kubelet, master03  Starting kubelet.
+  Normal   NodeAllocatableEnforced  308d                   kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   NodeNotSchedulable       308d                   kubelet, master03  Node master03 status is now: NodeNotSchedulable
+  Normal   NodeSchedulable          308d                   kubelet, master03  Node master03 status is now: NodeSchedulable
+  Normal   Starting                 30d                    kubelet, master03  Starting kubelet.
+  Normal   NodeHasSufficientMemory  30d (x8 over 30d)      kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    30d (x8 over 30d)      kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeAllocatableEnforced  30d                    kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   NodeHasSufficientPID     30d (x7 over 30d)      kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   NodeHasSufficientMemory  29d (x8 over 29d)      kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    29d (x8 over 29d)      kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     29d (x7 over 29d)      kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  29d                    kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   Starting                 29d                    kubelet, master03  Starting kubelet.
+  Normal   NodeAllocatableEnforced  29d                    kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   Starting                 29d                    kubelet, master03  Starting kubelet.
+  Normal   NodeHasSufficientMemory  29d (x8 over 29d)      kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    29d (x8 over 29d)      kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     29d (x7 over 29d)      kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   Starting                 29d                    kubelet, master03  Starting kubelet.
+  Normal   NodeHasSufficientMemory  29d (x8 over 29d)      kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    29d (x8 over 29d)      kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     29d (x7 over 29d)      kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  29d                    kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   NodeAllocatableEnforced  29d                    kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   Starting                 29d                    kubelet, master03  Starting kubelet.
+  Normal   NodeHasNoDiskPressure    29d (x8 over 29d)      kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     29d (x7 over 29d)      kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   NodeHasSufficientMemory  29d (x8 over 29d)      kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   Starting                 28d                    kubelet, master03  Starting kubelet.
+  Normal   NodeHasSufficientMemory  28d (x8 over 28d)      kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    28d (x8 over 28d)      kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeAllocatableEnforced  28d                    kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   NodeHasSufficientPID     28d (x7 over 28d)      kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   Starting                 23d                    kubelet, master03  Starting kubelet.
+  Normal   NodeHasSufficientMemory  23d (x8 over 23d)      kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    23d (x8 over 23d)      kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     23d (x7 over 23d)      kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  23d                    kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   NodeHasSufficientMemory  23d (x8 over 23d)      kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   Starting                 23d                    kubelet, master03  Starting kubelet.
+  Normal   NodeHasNoDiskPressure    23d (x8 over 23d)      kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     23d (x7 over 23d)      kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  23d                    kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   Starting                 23d                    kubelet, master03  Starting kubelet.
+  Normal   NodeHasSufficientMemory  23d (x8 over 23d)      kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    23d (x8 over 23d)      kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     23d (x7 over 23d)      kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  23d                    kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   Starting                 21d                    kubelet, master03  Starting kubelet.
+  Normal   NodeHasSufficientMemory  21d (x8 over 21d)      kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    21d (x8 over 21d)      kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     21d (x7 over 21d)      kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  21d                    kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   Starting                 20d                    kubelet, master03  Starting kubelet.
+  Normal   NodeAllocatableEnforced  20d                    kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   NodeHasNoDiskPressure    20d (x8 over 20d)      kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     20d (x7 over 20d)      kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   NodeHasSufficientMemory  20d (x8 over 20d)      kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   Starting                 19d                    kubelet, master03  Starting kubelet.
+  Normal   NodeHasSufficientMemory  19d (x8 over 19d)      kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    19d (x8 over 19d)      kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     19d (x7 over 19d)      kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  19d                    kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   Starting                 16d                    kubelet, master03  Starting kubelet.
+  Normal   NodeHasSufficientMemory  16d (x8 over 16d)      kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    16d (x8 over 16d)      kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     16d (x7 over 16d)      kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  16d                    kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   Starting                 14d                    kubelet, master03  Starting kubelet.
+  Normal   NodeAllocatableEnforced  14d                    kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   NodeHasSufficientPID     14d (x7 over 14d)      kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   NodeHasSufficientMemory  14d (x8 over 14d)      kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    14d (x8 over 14d)      kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeReady                14d                    kubelet, master03  Node master03 status is now: NodeReady
+  Normal   NodeHasSufficientMemory  14d (x2 over 14d)      kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    14d (x2 over 14d)      kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     14d (x2 over 14d)      kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Warning  Rebooted                 14d                    kubelet, master03  Node master03 has been rebooted, boot id: 75ea163a-782f-4e87-b9d1-423f0b41ce4b
+  Normal   NodeNotReady             14d                    kubelet, master03  Node master03 status is now: NodeNotReady
+  Normal   Starting                 14d                    kubelet, master03  Starting kubelet.
+  Normal   NodeAllocatableEnforced  14d                    kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   NodeNotSchedulable       14d                    kubelet, master03  Node master03 status is now: NodeNotSchedulable
+  Normal   NodeSchedulable          14d                    kubelet, master03  Node master03 status is now: NodeSchedulable
+  Normal   Starting                 9d                     kubelet, master03  Starting kubelet.
+  Normal   NodeAllocatableEnforced  9d                     kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   NodeHasSufficientMemory  9d (x8 over 9d)        kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    9d (x8 over 9d)        kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     9d (x7 over 9d)        kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   Starting                 9d                     kubelet, master03  Starting kubelet.
+  Normal   NodeAllocatableEnforced  9d                     kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   NodeHasNoDiskPressure    9d (x8 over 9d)        kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     9d (x7 over 9d)        kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   NodeHasSufficientMemory  9d (x8 over 9d)        kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   Starting                 9d                     kubelet, master03  Starting kubelet.
+  Normal   NodeHasSufficientMemory  9d (x8 over 9d)        kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    9d (x8 over 9d)        kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     9d (x7 over 9d)        kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  9d                     kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   NodeHasNoDiskPressure    8d (x8 over 8d)        kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientMemory  8d (x8 over 8d)        kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   Starting                 8d                     kubelet, master03  Starting kubelet.
+  Normal   NodeHasSufficientPID     8d (x7 over 8d)        kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  8d                     kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   Starting                 8d                     kubelet, master03  Starting kubelet.
+  Normal   NodeHasSufficientMemory  8d (x8 over 8d)        kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    8d (x7 over 8d)        kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeAllocatableEnforced  8d                     kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   NodeHasSufficientPID     8d (x8 over 8d)        kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   NodeHasSufficientMemory  2d15h (x8 over 2d15h)  kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    2d15h (x8 over 2d15h)  kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     2d15h (x7 over 2d15h)  kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  2d15h                  kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   Starting                 2d15h                  kubelet, master03  Starting kubelet.
+  Normal   Starting                 90m                    kubelet, master03  Starting kubelet.
+  Normal   NodeHasSufficientPID     90m (x8 over 90m)      kubelet, master03  Node master03 status is now: NodeHasSufficientPID
+  Normal   NodeAllocatableEnforced  90m                    kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   NodeHasNoDiskPressure    90m (x7 over 90m)      kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientMemory  90m (x8 over 90m)      kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   NodeAllocatableEnforced  15m                    kubelet, master03  Updated Node Allocatable limit across pods
+  Normal   Starting                 15m                    kubelet, master03  Starting kubelet.
+  Normal   NodeHasSufficientMemory  15m (x8 over 15m)      kubelet, master03  Node master03 status is now: NodeHasSufficientMemory
+  Normal   NodeHasNoDiskPressure    15m (x8 over 15m)      kubelet, master03  Node master03 status is now: NodeHasNoDiskPressure
+  Normal   NodeHasSufficientPID     15m (x7 over 15m)      kubelet, master03  Node master03 status is now: NodeHasSufficientPID

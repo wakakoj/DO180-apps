@@ -1,0 +1,41 @@
+[student@workstation ~]$ ssh lab@utility
+Activate the web console with: systemctl enable --now cockpit.socket
+
+This system is not registered to Red Hat Insights. See https://cloud.redhat.com/
+To register this system, run: insights-client --register
+
+Last login: Tue Jun  1 02:24:28 2021 from 172.25.250.9
+[lab@utility ~]$ ls ocp4/auth/kubeconfig 
+ocp4/auth/kubeconfig
+[lab@utility ~]$ oc whoami
+Error from server (ServiceUnavailable): the server is currently unable to handle the request (get users.user.openshift.io ~)
+[lab@utility ~]$ ^Cfig ocp4/auth/kubeconfig  
+[lab@utility ~]$ pwd
+/home/lab
+[lab@utility ~]$ ls /home/lab/ocp4/auth/kubeconfig 
+/home/lab/ocp4/auth/kubeconfig
+[lab@utility ~]$ cat  /home/lab/ocp4/auth/kubeconfig 
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURRakNDQWlxZ0F3SUJBZ0lJTU5NNExDcVVMTUV3RFFZSktvWklodmNOQVFFTEJRQXdKakVrTUNJR0ExVUUKQXd3    
+
+[lab@utility ~]$ ls /home/lab/ocp4/auth/kubeconfig 
+/home/lab/ocp4/auth/kubeconfig
+[lab@utility ~]$ export KUBECONFIG=/home/lab/ocp4/auth/kubeconfig 
+[lab@utility ~]$ oc whoami
+Error from server (ServiceUnavailable): the server is currently unable to handle the request (get users.user.openshift.io ~)
+[lab@utility ~]$ oc get nodes
+NAME       STATUS   ROLES           AGE    VERSION
+master01   Ready    master,worker   333d   v1.18.3+012b3ec
+master02   Ready    master,worker   333d   v1.18.3+012b3ec
+master03   Ready    master,worker   333d   v1.18.3+012b3ec
+[lab@utility ~]$ oc adm taint nodes master03 key1-
+node/master03 untainted
+[lab@utility ~]$ oc adm taint nodes master02 key1-
+node/master02 untainted
+[lab@utility ~]$ oc adm taint nodes master01 key1-
+node/master01 untainted
+[lab@utility ~]$ 
+
+

@@ -1,0 +1,894 @@
+[student@workstation ~]$ lab network-ingress start
+
+Checking prerequisites for Guided Exercise: Controlling Cluster Network Ingress
+
+ Verify the OpenShift cluster is running:
+ · Router pods are available...................................  SUCCESS
+ · OAuth pods are available....................................  SUCCESS
+ · API pods are available......................................  SUCCESS
+ · Control plane node 'master01' is ready......................  SUCCESS
+ · Control plane node 'master02' is ready......................  SUCCESS
+ · Control plane node 'master03' is ready......................  SUCCESS
+ Checking for conflicts with existing OpenShift projects:
+ · The 'network-ingress' project is absent.....................  SUCCESS
+
+Setting up the classroom for Guided Exercise: Controlling Cluster Network Ingress
+
+ · Validate 'admin' can log in with password 'redhat'..........  SUCCESS
+ · Validate 'leader' can log in with password 'redhat'.........  SUCCESS
+ · Validate 'developer' can log in with password 'developer'...  SUCCESS
+ Preparing Workstation:
+ · Download exercise files.....................................  SUCCESS
+ Configuring Certificates:
+ · Generating unique CA key password...........................  SUCCESS
+ · Setting environment variable in cert. configuration file....  SUCCESS
+ · Generating the CA key.......................................  SUCCESS
+ · Generating CA certificate...................................  SUCCESS
+ · Updating privileges on certs directory......................  SUCCESS
+
+Overall start status...........................................  SUCCESS
+
+[student@workstation ~]$ oc login -u developer -p developer https://api.ocp4.example.com:6443
+Login successful.
+
+You don't have any projects. You can try to create a new project, by running
+
+    oc new-project <projectname>
+
+[student@workstation ~]$ oc new-project network-ingress
+Now using project "network-ingress" on server "https://api.ocp4.example.com:6443".
+
+You can add applications to this project with the 'new-app' command. For example, try:
+
+    oc new-app ruby~https://github.com/sclorg/ruby-ex.git
+
+to build a new example application in Ruby. Or use kubectl to deploy a simple Kubernetes application:
+
+    kubectl create deployment hello-node --image=gcr.io/hello-minikube-zero-install/hello-node
+
+[student@workstation ~]$ ls ~/DO280/labs/network-ingress/todo-app-v1.yaml 
+/home/student/DO280/labs/network-ingress/todo-app-v1.yaml
+[student@workstation ~]$ less  ~/DO280/labs/network-ingress/todo-app-v1.yaml 
+[student@workstation ~]$ oc create -f   ~/DO280/labs/network-ingress/todo-app-v1.yaml 
+deployment.apps/todo-http created
+service/todo-http created
+[student@workstation ~]$ oc status
+In project network-ingress on server https://api.ocp4.example.com:6443
+
+svc/todo-http - 172.30.33.54:80 -> 8080
+  deployment/todo-http deploys quay.io/redhattraining/todo-angular:v1.1
+    deployment #1 running for 7 seconds - 0/1 pods
+
+
+1 info identified, use 'oc status --suggest' to see details.
+[student@workstation ~]$ oc status
+In project network-ingress on server https://api.ocp4.example.com:6443
+
+svc/todo-http - 172.30.33.54:80 -> 8080
+  deployment/todo-http deploys quay.io/redhattraining/todo-angular:v1.1
+    deployment #1 running for 25 seconds - 1 pod
+
+
+1 info identified, use 'oc status --suggest' to see details.
+[student@workstation ~]$ oc status
+In project network-ingress on server https://api.ocp4.example.com:6443
+
+svc/todo-http - 172.30.33.54:80 -> 8080
+  deployment/todo-http deploys quay.io/redhattraining/todo-angular:v1.1
+    deployment #1 running for 32 seconds - 1 pod
+
+
+1 info identified, use 'oc status --suggest' to see details.
+[student@workstation ~]$ oc expose svc todo-http --hostname todo-http.apps.ocp4.example.com
+route.route.openshift.io/todo-http exposed
+[student@workstation ~]$ oc get routes
+NAME        HOST/PORT                         PATH   SERVICES    PORT   TERMINATION   WILDCARD
+todo-http   todo-http.apps.ocp4.example.com          todo-http   8080                 None
+[student@workstation ~]$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 52:54:00:00:fa:09 brd ff:ff:ff:ff:ff:ff
+    inet 172.25.250.9/24 brd 172.25.250.255 scope global noprefixroute eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::236f:c5cd:12ec:6519/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+3: virbr0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default qlen 1000
+    link/ether 52:54:00:f9:9e:fd brd ff:ff:ff:ff:ff:ff
+    inet 192.168.122.1/24 brd 192.168.122.255 scope global virbr0
+       valid_lft forever preferred_lft forever
+4: virbr0-nic: <BROADCAST,MULTICAST> mtu 1500 qdisc fq_codel master virbr0 state DOWN group default qlen 1000
+    link/ether 52:54:00:f9:9e:fd brd ff:ff:ff:ff:ff:ff
+[student@workstation ~]$ ip a  |grep 172.25.250.9/24
+    inet 172.25.250.9/24 brd 172.25.250.255 scope global noprefixroute eth0
+[student@workstation ~]$ sudo tcpdump -i eth0 -A -n port 80 |grep js
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
+    <script type="text/javascript" src="assets/js/libs/jquery/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="assets/js/libs/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="assets/js/libs/angular/angular.min.js"></script>
+    <script type="text/javascript" src="assets/js/libs/angular/angular-route.min.js"></script>
+    <script type="text/javascript" src="assets/js/libs/angular/angular-animate.min.js"></script>
+    <script type="text/javascript" src="assets/js/libs/angular-ui-router/angular-ui-router.js"></script>
+    <script type="text/javascript" src="assets/js/libs/angular-strap/angular-strap.js"></script>
+    <script type="text/javascript" src="assets/js/libs/angular-strap/angular-strap.tpl.js"></script>
+    <script type="text/javascript" src="assets/js/libs/angular-xeditable/xeditable.js"></script>
+    <script type="text/javascript" src="assets/js/libs/angular/angular-sanitize.js"></script>
+    <script type="text/javascript" src="assets/js/app/utils/md5.js"></script>
+    <script type="text/javascript" src="assets/js/app/module.js"></script>
+    <script type="text/javascript" src="assets/js/app/states/states.js"></script>
+    <script type="text/javascript" src="assets/js/app/domain/todoitems.js"></script>
+    <script type="text/javascript" src="assets/js/app/ui/filters.js"></script>
+    <script type="text/javascript" src="assets/js/app/ui/focus.js"></script>
+    <script type="text/javascript" src="assets/js/app/ui/gravatar.js"></script>
+    <script type="text/javascript" src="assets/js/app/ui/editable.js"></script>
+01:11:24.273677 IP 172.25.250.9.43418 > 192.168.50.254.http: Flags [P.], seq 1:435, ack 1, win 229, options [nop,nop,TS val 655067291 ecr 700304498], length 434: HTTP: GET /assets/js/libs/jquery/jquery-1.11.1.min.js HTTP/1.1
+'...)..rGET /assets/js/libs/jquery/jquery-1.11.1.min.js HTTP/1.1
+01:11:24.274423 IP 172.25.250.9.43414 > 192.168.50.254.http: Flags [P.], seq 2002:2435, ack 3630, win 346, options [nop,nop,TS val 655067291 ecr 700304501], length 433: HTTP: GET /assets/js/libs/bootstrap/bootstrap.min.js HTTP/1.1
+'...)..uGET /assets/js/libs/bootstrap/bootstrap.min.js HTTP/1.1
+)..v'...ode||(this.hide(),this.$element=null,this.options=null)},b.prototype.enable=function(){this.enabled=!0},b.prototype.disable=function(){this.enabled=!1},b.prototype.toggleEnabled=function(){this.enabled=!this.enabled},b.prototype.toggle=function(b){var c=b?a(b.currentTarget)[this.type](this.getDelegateOptions()).data("bs."+this.type):this;c.tip().hasClass("in")?c.leave(c):c.enter(c)},b.prototype.destroy=function(){clearTimeout(this.timeout),this.hide().$element.off("."+this.type).removeData("bs."+this.type)};var c=a.fn.tooltip;a.fn.tooltip=function(c){return this.each(function(){var d=a(this),e=d.data("bs.tooltip"),f="object"==typeof c&&c;(e||"destroy"!=c)&&(e||d.data("bs.tooltip",e=new b(this,f)),"string"==typeof c&&e[c]())})},a.fn.tooltip.Constructor=b,a.fn.tooltip.noConflict=function(){return a.fn.tooltip=c,this}}(jQuery),+function(a){"use strict";var b=function(a,b){this.init("popover",a,b)};if(!a.fn.tooltip)throw new Error("Popover requires tooltip.js");b.DEFAULTS=a.extend({},a.fn.tooltip.Constructor.DEFAULTS,{placement:"right",trigger:"click",content:"",template:'<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'}),b.prototype=a.extend({},a.fn.tooltip.Constructor.prototype),b.prototype.constructor=b,b.prototype.getDefaults=function(){return b.DEFAULTS},b.prototype.setContent=function(){var a=this.tip(),b=this.getTitle(),c=this.getContent();a.find(".popover-title")[this.options.html?"html":"text"](b),a.find(".popover-content")[this.options.html?"string"==typeof c?"html":"append":"text"](c),a.removeClass("fade top bottom left right in"),a.find(".popover-title").html()||a.find(".popover-title").hide()},b.prototype.hasContent=function(){return this.getTitle()||this.getContent()},b.prototype.getContent=function(){var a=this.$element,b=this.options;return a.attr("data-content")||("function"==typeof b.content?b.content.call(a[0]):b.content)},b.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".arrow")},b.prototype.tip=function(){return this.$tip||(this.$tip=a(this.options.template)),this.$tip};var c=a.fn.popover;a.fn.popover=function(c){return this.each(function(){var d=a(this),e=d.data("bs.popover"),f="object"==typeof c&&c;(e||"destroy"!=c)&&(e||d.data("bs.popover",e=new b(this,f)),"string"==typeof c&&e[c]())})},a.fn.popover.Constructor=b,a.fn.popover.noConflict=function(){return a.fn.popover=c,this}}(jQuery),+function(a){"use strict";function b(c,d){var e,f=a.proxy(this.process,this);this.$element=a(a(c).is("body")?window:c),this.$body=a("body"),this.$scrollElement=this.$element.on("scroll.bs.scroll-spy.data-api",f),this.options=a.extend({},b.DEFAULTS,d),this.selector=(this.options.target||(e=a(c).attr("href"))&&e.replace(/.*(?=#[^\s]+$)/,"")||"")+" .nav li > a",this.offsets=a([]),this.targets=a([]),this.activeTarget=null,this.refresh(),this.process()}b.DEFAULTS={offset:10},b.prototype.refresh=function(){var b=this.$element[0]==window?"offset":"position";this.offsets=a([]),this.targets=a([]);{var c=this;this.$body.find(this.selector).map(function(){var d=a(this),e=d.data("target")||d.attr("href"),f=/^#./.test(e)&&a(e);return f&&f.length&&f.is(":visible")&&[[f[b]().top+(!a.isWindow(c.$scrollElement.get(0))&&c.$scrollElement.scrollTop()),e]]||null}).sort(function(a,b){return a[0]-b[0]}).each(function(){c.offsets.push(this[0]),c.targets.push(this[1])})}},b.prototype.process=function(){var a,b=this.$scrollElement.scrollTop()+this.options.offset,c=this.$scrollElement[0].scrollHeight||this.$body[0].scrollHeight,d=c-this.$scrollElement.height(),e=this.offsets,f=this.targets,g=this.activeTarget;if(b>=d)return g!=(a=f.last()[0])&&this.activate(a);if(g&&b<=e[0])return g!=(a=f[0])&&this.activate(a);for(a=e.length;a--;)g!=f[a]&&b>=e[a]&&(!e[a+1]||b<=e[a+1])&&this.activate(f[a])},b.prototype.activate=function(b){this.activeTarget=b,a(this.selector).parentsUntil(this.options.target,".active").removeClass("active");var c=this.selector+'[data-target="'+b+'"],'+this.selector+'[href="'+b+'"]',d=a(c).parents("li").addClass("active");d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active")),d.trigger("activate.bs.scrollspy")};var c=a.fn.scrollspy;a.fn.scrollspy=function(c){return this.each(function(){var d=a(this),e=d.data("bs.scrollspy"),f="object"==typeof c&&c;e||d.data("bs.scrollspy",e=new b(this,f)),"string"==typeof c&&e[c]()})},a.fn.scrollspy.Constructor=b,a.fn.scrollspy.noConflict=function(){return a.fn.scrollspy=c,this},a(window).on("load",function(){a('[data-spy="scroll"]').each(function(){var b=a(this);b.scrollspy(b.data())})})}(jQuery),+function(a){"use strict";var b=function(b){this.element=a(b)};b.prototype.show=function(){var b=this.element,c=b.closest("ul:not(.dropdown-menu)"),d=b.data("target");if(d||(d=b.attr("href"),d=d&&d.replace(/.*(?=#[^\s]*$)/,"")),!b.parent("li").hasClass("active")){var e=c.find(".active:last a")[0],f=a.Event("show.bs.tab",{relatedTarget:e});if(b.trigger(f),!f.isDefaultPrevented()){var g=a(d);this.activate(b.parent("li"),c),this.activate(g,g.parent(),function(){b.trigger({type:"shown.bs.tab",relatedTarget:e})})}}},b.prototype.activate=function(b,c,d){function e(){f.removeClass("active").find("> .dropdown-menu > .active").removeClass("active"),b.addClass("active"),g?(b[0].offsetWidth,b.addClass("in")):b.removeClass("fade"),b.parent(".dropdown-menu")&&b.closest("li.dropdown").addClass("active"),d&&d()}var f=c.find("> .active"),g=d&&a.support.transition&&f.hasClass("fade");g?f.one(a.support.transition.end,e).emulateTransitionEnd(150):e(),f.removeClass("in")};var c=a.fn.tab;a.fn.tab=function(c){return this.each(function(){var d=a(this),e=d.data("bs.tab");e||d.data("bs.tab",e=new b(this)),"string"==typeof c&&e[c]()})},a.fn.tab.Constructor=b,a.fn.tab.noConflict=function(){return a.fn.tab=c,this},a(document).on("click.bs.tab.data-api",'[data-toggle="tab"], [data-toggle="pill"]',function(b){b.preventDefault(),a(this).tab("show")})}(jQuery),+function(a){"use strict";var b=function(c,d){this.options=a.extend({},b.DEFAULTS,d),this.$window=a(window).on("scroll.bs.affix.data-api",a.proxy(this.checkPosition,this)).on("click.bs.affix.data-api",a.proxy(this.checkPositionWithEventLoop,this)),this.$element=a(c),this.affixed=this.unpin=this.pinnedOffset=null,this.checkPosition()};b.RESET="affix affix-top affix-bottom",b.DEFAULTS={offset:0},b.prototype.getPinnedOffset=function(){if(this.pinnedOffset)return this.pinnedOffset;this.$element.removeClass(b.RESET).addClass("affix");var a=this.$window.scrollTop(),c=this.$element.offset();return this.pinnedOffset=c.top-a},b.prototype.checkPositionWithEventLoop=function(){setTimeout(a.proxy(this.checkPosition,this),1)},b.prototype.checkPosition=function(){if(this.$element.is(":visible")){var c=a(document).height(),d=this.$window.scrollTop(),e=this.$element.offset(),f=this.options.offset,g=f.top,h=f.bottom;"top"==this.affixed&&(e.top+=d),"object"!=typeof f&&(h=g=f),"function"==typeof g&&(g=f.top(this.$element)),"function"==typeof h&&(h=f.bottom(this.$element));var i=null!=this.unpin&&d+this.unpin<=e.top?!1:null!=h&&e.top+this.$element.height()>=c-h?"bottom":null!=g&&g>=d?"top":!1;if(this.affixed!==i){this.unpin&&this.$element.css("top","");var j=
+)..v'...c,zc,Ac=/#.*$/,Bc=/([?&])_=[^&]*/,Cc=/^(.*?):[ \t]*([^\r\n]*)\r?$/gm,Dc=/^(?:about|app|app-storage|.+-extension|file|res|widget):$/,Ec=/^(?:GET|HEAD)$/,Fc=/^\/\//,Gc=/^([\w.+-]+:)(?:\/\/(?:[^\/?#]*@|)([^\/?#:]*)(?::(\d+)|)|)/,Hc={},Ic={},Jc="*/".concat("*");try{zc=location.href}catch(Kc){zc=y.createElement("a"),zc.href="",zc=zc.href}yc=Gc.exec(zc.toLowerCase())||[];function Lc(a){return function(b,c){"string"!=typeof b&&(c=b,b="*");var d,e=0,f=b.toLowerCase().match(E)||[];if(m.isFunction(c))while(d=f[e++])"+"===d.charAt(0)?(d=d.slice(1)||"*",(a[d]=a[d]||[]).unshift(c)):(a[d]=a[d]||[]).push(c)}}function Mc(a,b,c,d){var e={},f=a===Ic;function g(h){var i;return e[h]=!0,m.each(a[h]||[],function(a,h){var j=h(b,c,d);return"string"!=typeof j||f||e[j]?f?!(i=j):void 0:(b.dataTypes.unshift(j),g(j),!1)}),i}return g(b.dataTypes[0])||!e["*"]&&g("*")}function Nc(a,b){var c,d,e=m.ajaxSettings.flatOptions||{};for(d in b)void 0!==b[d]&&((e[d]?a:c||(c={}))[d]=b[d]);return c&&m.extend(!0,a,c),a}function Oc(a,b,c){var d,e,f,g,h=a.contents,i=a.dataTypes;while("*"===i[0])i.shift(),void 0===e&&(e=a.mimeType||b.getResponseHeader("Content-Type"));if(e)for(g in h)if(h[g]&&h[g].test(e)){i.unshift(g);break}if(i[0]in c)f=i[0];else{for(g in c){if(!i[0]||a.converters[g+" "+i[0]]){f=g;break}d||(d=g)}f=f||d}return f?(f!==i[0]&&i.unshift(f),c[f]):void 0}function Pc(a,b,c,d){var e,f,g,h,i,j={},k=a.dataTypes.slice();if(k[1])for(g in a.converters)j[g.toLowerCase()]=a.converters[g];f=k.shift();while(f)if(a.responseFields[f]&&(c[a.responseFields[f]]=b),!i&&d&&a.dataFilter&&(b=a.dataFilter(b,a.dataType)),i=f,f=k.shift())if("*"===f)f=i;else if("*"!==i&&i!==f){if(g=j[i+" "+f]||j["* "+f],!g)for(e in j)if(h=e.split(" "),h[1]===f&&(g=j[i+" "+h[0]]||j["* "+h[0]])){g===!0?g=j[e]:j[e]!==!0&&(f=h[0],k.unshift(h[1]));break}if(g!==!0)if(g&&a["throws"])b=g(b);else try{b=g(b)}catch(l){return{state:"parsererror",error:g?l:"No conversion from "+i+" to "+f}}}return{state:"success",data:b}}m.extend({active:0,lastModified:{},etag:{},ajaxSettings:{url:zc,type:"GET",isLocal:Dc.test(yc[1]),global:!0,processData:!0,async:!0,contentType:"application/x-www-form-urlencoded; charset=UTF-8",accepts:{"*":Jc,text:"text/plain",html:"text/html",xml:"application/xml, text/xml",json:"application/json, text/javascript"},contents:{xml:/xml/,html:/html/,json:/json/},responseFields:{xml:"responseXML",text:"responseText",json:"responseJSON"},converters:{"* text":String,"text html":!0,"text json":m.parseJSON,"text xml":m.parseXML},flatOptions:{url:!0,context:!0}},ajaxSetup:function(a,b){return b?Nc(Nc(a,m.ajaxSettings),b):Nc(m.ajaxSettings,a)},ajaxPrefilter:Lc(Hc),ajaxTransport:Lc(Ic),ajax:function(a,b){"object"==typeof a&&(b=a,a=void 0),b=b||{};var c,d,e,f,g,h,i,j,k=m.ajaxSetup({},b),l=k.context||k,n=k.context&&(l.nodeType||l.jquery)?m(l):m.event,o=m.Deferred(),p=m.Callbacks("once memory"),q=k.statusCode||{},r={},s={},t=0,u="canceled",v={readyState:0,getResponseHeader:function(a){var b;if(2===t){if(!j){j={};while(b=Cc.exec(f))j[b[1].toLowerCase()]=b[2]}b=j[a.toLowerCase()]}return null==b?null:b},getAllResponseHeaders:function(){return 2===t?f:null},setRequestHeader:function(a,b){var c=a.toLowerCase();return t||(a=s[c]=s[c]||a,r[a]=b),this},overrideMimeType:function(a){return t||(k.mimeType=a),this},statusCode:function(a){var b;if(a)if(2>t)for(b in a)q[b]=[q[b],a[b]];else v.always(a[v.status]);return this},abort:function(a){var b=a||u;return i&&i.abort(b),x(0,b),this}};if(o.promise(v).complete=p.add,v.success=v.done,v.error=v.fail,k.url=((a||k.url||zc)+"").replace(Ac,"").replace(Fc,yc[1]+"//"),k.type=b.method||b.type||k.method||k.type,k.dataTypes=m.trim(k.dataType||"*").toLowerCase().match(E)||[""],null==k.crossDomain&&(c=Gc.exec(k.url.toLowerCase()),k.crossDomain=!(!c||c[1]===yc[1]&&c[2]===yc[2]&&(c[3]||("http:"===c[1]?"80":"443"))===(yc[3]||("http:"===yc[1]?"80":"443")))),k.data&&k.processData&&"string"!=typeof k.data&&(k.data=m.param(k.data,k.traditional)),Mc(Hc,k,b,v),2===t)return v;h=k.global,h&&0===m.active++&&m.event.trigger("ajaxStart"),k.type=k.type.toUpperCase(),k.hasContent=!Ec.test(k.type),e=k.url,k.hasContent||(k.data&&(e=k.url+=(wc.test(e)?"&":"?")+k.data,delete k.data),k.cache===!1&&(k.url=Bc.test(e)?e.replace(Bc,"$1_="+vc++):e+(wc.test(e)?"&":"?")+"_="+vc++)),k.ifModified&&(m.lastModified[e]&&v.setRequestHeader("If-Modified-Since",m.lastModified[e]),m.etag[e]&&v.setRequestHeader("If-None-Match",m.etag[e])),(k.data&&k.hasContent&&k.contentType!==!1||b.contentType)&&v.setRequestHeader("Content-Type",k.contentType),v.setRequestHeader("Accept",k.dataTypes[0]&&k.accepts[k.dataTypes[0]]?k.accepts[k.dataTypes[0]]+("*"!==k.dataTypes[0]?", "+Jc+"; q=0.01":""):k.accepts["*"]);for(d in k.headers)v.setRequestHeader(d,k.headers[d]);if(k.beforeSend&&(k.beforeSend.call(l,v,k)===!1||2===t))return v.abort();u="abort";for(d in{success:1,error:1,complete:1})v[d](k[d]);if(i=Mc(Ic,k,b,v)){v.readyState=1,h&&n.trigger("ajaxSend",[v,k]),k.async&&k.timeout>0&&(g=setTimeout(function(){v.abort("timeout")},k.timeout));try{t=1,i.send(r,x)}catch(w){if(!(2>t))throw w;x(-1,w)}}else x(-1,"No Transport");function x(a,b,c,d){var j,r,s,u,w,x=b;2!==t&&(t=2,g&&clearTimeout(g),i=void 0,f=d||"",v.readyState=a>0?4:0,j=a>=200&&300>a||304===a,c&&(u=Oc(k,v,c)),u=Pc(k,u,v,j),j?(k.ifModified&&(w=v.getResponseHeader("Last-Modified"),w&&(m.lastModified[e]=w),w=v.getResponseHeader("etag"),w&&(m.etag[e]=w)),204===a||"HEAD"===k.type?x="nocontent":304===a?x="notmodified":(x=u.state,r=u.data,s=u.error,j=!s)):(s=x,(a||!x)&&(x="error",0>a&&(a=0))),v.status=a,v.statusText=(b||x)+"",j?o.resolveWith(l,[r,x,v]):o.rejectWith(l,[v,x,s]),v.statusCode(q),q=void 0,h&&n.trigger(j?"ajaxSuccess":"ajaxError",[v,k,j?r:s]),p.fireWith(l,[v,x]),h&&(n.trigger("ajaxComplete",[v,k]),--m.active||m.event.trigger("ajaxStop")))}return v},getJSON:function(a,b,c){return m.get(a,b,c,"json")},getScript:function(a,b){return m.get(a,void 0,b,"script")}}),m.each(["get","post"],function(a,b){m[b]=function(a,c,d,e){re
+turn m.isFunction(c)&&(e=e||d,d=c,c=void 0),m.ajax({url:a,type:b,dataType:e,data:c,success:d})}}),m.each(["ajaxStart","ajaxStop","ajaxComplete","ajaxError","ajaxSuccess","ajaxSend"],function(a,b){m.fn[b]=function(a){return this.on(b,a)}}),m._evalUrl=function(a){return m.ajax({url:a,type:"GET",dataType:"script",async:!1,global:!1,"throws":!0})},m.fn.extend({wrapAll:function(a){if(m.isFunction(a))return this.each(function(b){m(this).wrapAll(a.call(this,b))});if(this[0]){var b=m(a,this[0].ownerDocument).eq(0).clone(!0);this[0].parentNode&&b.insertBefore(this[0]),b.map(function(){var a=this;while(a.firstChild&&1===a.firstChild.nodeType)a=a.firstChild;return a}).append(this)}return this},wrapInner:function(a){return this.each(m.isFunction(a)?function(b){m(this).wrapInner(a.call(this,b))}:function(){var b=m(this),c=b.contents();c.length?c.wrapAll(a):b.append(a)})},wrap:function(a){var b=m.isFunction(a);return this.each(function(c){m(this).wrapAll(b?a.call(this,c):a)})},unwrap:function(){return this.parent().each(function(){m.nodeName(this,"body")||m(this).replaceWith(this.childNodes)}).end()}}),m.expr.filters.hidden=function(a){return a.offsetWidth<=0&&a.offsetHeight<=0||!k.reliableHiddenOffsets()&&"none"===(a.style&&a.style.display||m.css(a,"display"))},m.expr.filters.visible=function(a){return!m.expr.filters.hidden(a)};var Qc=/%20/g,Rc=/\[\]$/,Sc=/\r?\n/g,Tc=/^(?:submit|button|image|reset|file)$/i,Uc=/^(?:input|select|textarea|keygen)/i;function Vc(a,b,c,d){var e;if(m.isArray(b))m.each(b,function(b,e){c||Rc.test(a)?d(a,e):Vc(a+"["+("object"==typeof e?b:"")+"]",e,c,d)});else if(c||"object"!==m.type(b))d(a,b);else for(e in b)Vc(a+"["+e+"]",b[e],c,d)}m.param=function(a,b){var c,d=[],e=function(a,b){b=m.isFunction(b)?b():null==b?"":b,d[d.length]=encodeURIComponent(a)+"="+encodeURIComponent(b)};if(void 0===b&&(b=m.ajaxSettings&&m.ajaxSettings.traditional),m.isArray(a)||a.jquery&&!m.isPlainObject(a))m.each(a,function(){e(this.name,this.value)});else for(c in a)Vc(c,a[c],b,e);return d.join("&").replace(Qc,"+")},m.fn.extend({serialize:function(){return m.param(this.serializeArray())},serializeArray:function(){return this.map(function(){var a=m.prop(this,"elements");return a?m.makeArray(a):this}).filter(function(){var a=this.type;return this.name&&!m(this).is(":disabled")&&Uc.test(this.nodeName)&&!Tc.test(a)&&(this.checked||!W.test(a))}).map(function(a,b){var c=m(this).val();return null==c?null:m.isArray(c)?m.map(c,function(a){return{name:b.name,value:a.replace(Sc,"\r\n")}}):{name:b.name,value:c.replace(Sc,"\r\n")}}).get()}}),m.ajaxSettings.xhr=void 0!==a.ActiveXObject?function(){return!this.isLocal&&/^(get|post|head|put|delete|options)$/i.test(this.type)&&Zc()||$c()}:Zc;var Wc=0,Xc={},Yc=m.ajaxSettings.xhr();a.ActiveXObject&&m(a).on("unload",function(){for(var a in Xc)Xc[a](void 0,!0)}),k.cors=!!Yc&&"withCredentials"in Yc,Yc=k.ajax=!!Yc,Yc&&m.ajaxTransport(function(a){if(!a.crossDomain||k.cors){var b;return{send:function(c,d){var e,f=a.xhr(),g=++Wc;if(f.open(a.type,a.url,a.async,a.username,a.password),a.xhrFields)for(e in a.xhrFields)f[e]=a.xhrFields[e];a.mimeType&&f.overrideMimeType&&f.overrideMimeType(a.mimeType),a.crossDomain||c["X-Requested-With"]||(c["X-Requested-With"]="XMLHttpRequest");for(e in c)void 0!==c[e]&&f.setRequestHeader(e,c[e]+"");f.send(a.hasContent&&a.data||null),b=function(c,e){var h,i,j;if(b&&(e||4===f.readyState))if(delete Xc[g],b=void 0,f.onreadystatechange=m.noop,e)4!==f.readyState&&f.abort();else{j={},h=f.status,"string"==typeof f.responseText&&(j.text=f.responseText);try{i=f.statusText}catch(k){i=""}h||!a.isLocal||a.crossDomain?1223===h&&(h=204):h=j.text?200:404}j&&d(h,i,j,f.getAllResponseHeaders())},a.async?4===f.readyState?setTimeout(b):f.onreadystatechange=Xc[g]=b:b()},abort:function(){b&&b(void 0,!0)}}}});function Zc(){try{return new a.XMLHttpRequest}catch(b){}}function $c(){try{return new a.ActiveXObject("Microsoft.XMLHTTP")}catch(b){}}m.ajaxSetup({accepts:{script:"text/javascript, application/javascript, application/ecmascript, application/x-ecmascript"},contents:{script:/(?:java|ecma)script/},converters:{"text script":function(a){return m.globalEval(a),a}}}),m.ajaxPrefilter("script",function(a){void 0===a.cache&&(a.cache=!1),a.crossDomain&&(a.type="GET",a.global=!1)}),m.ajaxTransport("script",function(a){if(a.crossDomain){var b,c=y.head||m("head")[0]||y.documentElement;return{send:function(d,e){b=y.createElement("script"),b.async=!0,a.scriptCharset&&(b.charset=a.scriptCharset),b.src=a.url,b.onload=b.onreadystatechange=function(a,c){(c||!b.readyState||/loaded|complete/.test(b.readyState))&&(b.onload=b.onreadystatechange=null,b.parentNode&&b.parentNode.removeChild(b),b=null,c||e(200,"success"))},c.insertBefore(b,c.firstChild)},abort:function(){b&&b.onload(void 0,!0)}}}});var _c=[],ad=/(=)\?(?=&|$)|\?\?/;m.ajaxSetup({jsonp:"callback",jsonpCallback:function(){var a=_c.pop()||m.expando+"_"+vc++;return this[a]=!0,a}}),m.ajaxPrefilter("json jsonp",function(b,c,d){var e,f,g,h=b.jsonp!==!1&&(ad.test(b.url)?"url":"string"==typeof b.data&&!(b.contentType||"").indexOf("application/x-www-form-urlencoded")&&ad.test(b.data)&&"data");return h||"jsonp"===b.dataTypes[0]?(e=b.jsonpCallback=m.isFunction(b.jsonpCallback)?b.jsonpCallback():b.jsonpCallback,h?b[h]=b[h].replace(ad,"$1"+e):b.jsonp!==!1&&(b.url+=(wc.test(b.url)?"&":"?")+b.jsonp+"="+e),b.converters["script json"]=function(){return g||m.error(e+" was not called"),g[0]},b.dataTypes[0]="json",f=a[e],a[e]=function(){g=arguments},d.always(function(){a[e]=f,b[e]&&(b.jsonpCallback=c.jsonpCallback,_c.push(e)),g&&m.isFunction(f)&&f(g[0]),g=f=void 0}),"script"):void 0}),m.parseHTML=function(a,b,c){if(!a||"string"!=typeof a)return null;"boolean"==typeof b&&(c=b,b=!1),b=b||y;var d=u.exec(a),e=!c&&[];return d?[b.createElement(d[1])]:(d=m.buildFragment([a],b,e),e&&e.length&&m(e).remove(),m.merge([],d.childNodes))};var bd=m.fn.load;m.fn.load=function(a,b,c){if("string"!=typeof a&&bd)return bd.apply(this,arguments);var d,e,f,g=this,h=a.indexOf(" ");return h>=0&&(d=m.trim(a.slice(h,a.length)),a=a.slice(0,h)),m.isFunction(b)?(c=b,b=void 0):b&&"object"==typeof b&&(f="POST"),g.length>0&&m.ajax({url:a,type:f,dataType:"html",data:b}).done(function(a){e=arguments,g.html(d?m("<div>").append(m.parseHTML(a)).find(d):a)}).complete(c&&function(a,b){g.each(c,e||[a.responseText,b,a])}),this},m.expr.filters.animated=function(a){return m.grep(m.timers,function(b){return a===b.elem}).length};var cd=a.document.documentElement;function dd(a){return m.isWindow(a)?a:9===a.nodeType?a.defaultView||a.parentWindow:!1}m.offset={setOffset:function(a,b,c){var d,e,f,g,h,i,j,k=m.css(a,"position"),l=m(a),n={};"static"===k&&(a.style.position="relative"),h=l.offset(),f=m.css(a,"top"),i=m.css(a,"left"),j=("absolute"===k||"fixed"===k)&&m.inArray("auto",[f,i])>-1,j?(d=l.position(),g=d.top,e=d.left):(g=parseFloat(f)||0,e=parseFloat(i)||0),m.isFunction(b)&&(b=b.call(a,c,h)),null!=b.top&&(n.top=b.top-h.top+g),null!=b.left&&(n.left=b.left-h.left+e),"using"in b?b.using.call(a,n):l.css(n)}},m.fn.extend({of
+01:11:24.276607 IP 172.25.250.9.43420 > 192.168.50.254.http: Flags [P.], seq 1:430, ack 1, win 229, options [nop,nop,TS val 655067294 ecr 700304501], length 429: HTTP: GET /assets/js/libs/angular/angular.min.js HTTP/1.1
+'...)..uGET /assets/js/libs/angular/angular.min.js HTTP/1.1
+01:11:24.276690 IP 172.25.250.9.43414 > 192.168.50.254.http: Flags [P.], seq 2435:2870, ack 32935, win 813, options [nop,nop,TS val 655067294 ecr 700304502], length 435: HTTP: GET /assets/js/libs/angular/angular-route.min.js HTTP/1.1
+'...)..vGET /assets/js/libs/angular/angular-route.min.js HTTP/1.1
+01:11:24.276747 IP 172.25.250.9.43418 > 192.168.50.254.http: Flags [P.], seq 435:872, ack 96026, win 1118, options [nop,nop,TS val 655067294 ecr 700304502], length 437: HTTP: GET /assets/js/libs/angular/angular-animate.min.js HTTP/1.1
+'...)..vGET /assets/js/libs/angular/angular-animate.min.js HTTP/1.1
+ (c) 2010-2014 Google, Inc. http://angularjs.org
+//# sourceMappingURL=angular-route.min.js.map
+01:11:24.277378 IP 172.25.250.9.43414 > 192.168.50.254.http: Flags [P.], seq 2870:3315, ack 37031, win 877, options [nop,nop,TS val 655067294 ecr 700304504], length 445: HTTP: GET /assets/js/libs/angular-ui-router/angular-ui-router.js HTTP/1.1
+'...)..xGET /assets/js/libs/angular-ui-router/angular-ui-router.js HTTP/1.1
+/* commonjs package manager support (eg componentjs) */
+/*jshint globalstrict:true*/
+ *   <script src="js/angular.js"></script>
+ *   <script src="js/angular-ui-router.min.js"></script>
+    /*jshint validthis: true */
+    /*jshint validthis: true */
+ (c) 2010-2014 Google, Inc. http://angularjs.org
+//# sourceMappingURL=angular-animate.min.js.map
+   * Reverts back to using the core [`$anchorScroll`](http://docs.angularjs.org/api/ng.$anchorScroll) service for
+ * *Note: To revert back to old [`$anchorScroll`](http://docs.angularjs.org/api/ng.$anchorScroll)
+    /*jshint validthis: true */
+    /*jshint validthis: true */
+    /*jshint validthis: true */
+01:11:24.282229 IP 172.25.250.9.43416 > 192.168.50.254.http: Flags [P.], seq 539:976, ack 158, win 237, options [nop,nop,TS val 655067299 ecr 700304503], length 437: HTTP: GET /assets/js/libs/angular-strap/angular-strap.js HTTP/1.1
+'...)..wGET /assets/js/libs/angular-strap/angular-strap.js HTTP/1.1
+01:11:24.282289 IP 172.25.250.9.43424 > 192.168.50.254.http: Flags [P.], seq 1:442, ack 1, win 229, options [nop,nop,TS val 655067299 ecr 700304504], length 441: HTTP: GET /assets/js/libs/angular-strap/angular-strap.tpl.js HTTP/1.1
+'...)..xGET /assets/js/libs/angular-strap/angular-strap.tpl.js HTTP/1.1
+01:11:24.282334 IP 172.25.250.9.43422 > 192.168.50.254.http: Flags [P.], seq 1:438, ack 1, win 229, options [nop,nop,TS val 655067299 ecr 700304504], length 437: HTTP: GET /assets/js/libs/angular-xeditable/xeditable.js HTTP/1.1
+'...)..xGET /assets/js/libs/angular-xeditable/xeditable.js HTTP/1.1
+ (c) 2010-2014 Google, Inc. http://angularjs.org
+(function(T,V,s){'use strict';function t(b){return function(){var a=arguments[0],c,a="["+(b?b+":":"")+a+"] http://errors.angularjs.org/1.2.18/"+(b?b+"/":"")+a;for(c=1;c<arguments.length;c++)a=a+(1==c?"?":"&")+"p"+(c-1)+"="+encodeURIComponent("function"==typeof arguments[c]?arguments[c].toString().replace(/ \{[\s\S]*$/,""):"undefined"==typeof arguments[c]?"undefined":"string"!=typeof arguments[c]?JSON.stringify(arguments[c]):arguments[c]);return Error(a)}}function db(b){if(null==b||Ea(b))return!1;
+["$log",function(b){return function(a,c){b.error.apply(b,arguments)}}]}function wc(b){var a={},c,d,e;if(!b)return a;q(b.split("\n"),function(b){e=b.indexOf(":");c=L(aa(b.substr(0,e)));d=aa(b.substr(e+1));c&&(a[c]=a[c]?a[c]+(", "+d):d)});return a}function xc(b){var a=U(b)?b:s;return function(c){a||(a=wc(b));return c?a[L(c)]||null:a}}function yc(b,a,c){if(Q(c))return c(b,a);q(c,function(c){b=c(b,a)});return b}function Td(){var b=/^\s*(\[|\{[^\{])/,a=/[\}\]]\s*$/,c=/^\)\]\}',?\n/,d={"Content-Type":"application/json;charset=utf-8"},
+e=this.defaults={transformResponse:[function(d){C(d)&&(d=d.replace(c,""),b.test(d)&&a.test(d)&&(d=ac(d)));return d}],transformRequest:[function(a){return U(a)&&"[object File]"!==wa.call(a)&&"[object Blob]"!==wa.call(a)?ra(a):a}],headers:{common:{Accept:"application/json, text/plain, */*"},post:ka(d),put:ka(d),patch:ka(d)},xsrfCookieName:"XSRF-TOKEN",xsrfHeaderName:"X-XSRF-TOKEN"},g=this.interceptors=[],f=this.responseInterceptors=[];this.$get=["$httpBackend","$browser","$cacheFactory","$rootScope",
+(function(a){q(arguments,function(a){r[a]=function(b,c){return r(J(c||{},{method:a,url:b}))}})})("get","delete","head","jsonp");(function(a){q(arguments,function(a){r[a]=function(b,c,d){return r(J(d||{},{method:a,url:b,data:c}))}})})("post","put");r.defaults=e;return r}]}function ve(b){if(8>=S&&(!b.match(/^(get|post|head|put|delete|options)$/i)||!T.XMLHttpRequest))return new T.ActiveXObject("Microsoft.XMLHTTP");if(T.XMLHttpRequest)return new T.XMLHttpRequest;throw t("$httpBackend")("noxhr");}function Ud(){this.$get=
+/loaded|complete/.test(g.readyState)&&(g.onreadystatechange=null,f({type:"load"}))});e.body.appendChild(g);return f}var f=-1;return function(e,m,h,l,n,p,r,v){function I(){u=f;F&&F();z&&z.abort()}function x(a,d,e,g,f){P&&c.cancel(P);F=z=null;0===d&&(d=e?200:"file"==sa(m).protocol?404:0);a(1223===d?204:d,e,g,f||"");b.$$completeOutstandingRequest(y)}var u;b.$$incOutstandingRequestCount();m=m||b.url();if("jsonp"==L(e)){var M="_"+(d.counter++).toString(36);d[M]=function(a){d[M].data=a;d[M].called=!0};
+var F=g(m.replace("JSON_CALLBACK","angular.callbacks."+M),M,function(a,b){x(l,a,d[M].data,"",b);d[M]=y})}else{var z=a(e);z.open(e,m,!0);q(n,function(a,b){B(a)&&z.setRequestHeader(b,a)});z.onreadystatechange=function(){if(z&&4==z.readyState){var a=null,b=null;u!==f&&(a=z.getAllResponseHeaders(),b="response"in z?z.response:z.responseText);x(l,u||z.status,b,a,z.statusText||"")}};r&&(z.withCredentials=!0);if(v)try{z.responseType=v}catch(s){if("json"!==v)throw s;}z.send(h||null)}if(0<p)var P=c(I,p);else p&&
+"/"+W.pathname}}function Mb(b){b=C(b)?sa(b):b;return b.protocol===Ic.protocol&&b.host===Ic.host}function ee(){this.$get=$(T)}function kc(b){function a(d,e){if(U(d)){var g={};q(d,function(b,c){g[c]=a(c,b)});return g}return b.factory(d+c,e)}var c="Filter";this.register=a;this.$get=["$injector",function(a){return function(b){return a.get(b+c)}}];a("currency",Jc);a("date",Kc);a("filter",Ce);a("json",De);a("limitTo",Ee);a("lowercase",Fe);a("number",Lc);a("orderBy",Mc);a("uppercase",Ge)}function Ce(){return function(b,
+Edit-in-place for angular.js
+JS:"js"},W=V.createElement("a"),Ic=sa(T.location.href,!0);kc.$inject=["$provide"];Jc.$inject=["$locale"];Lc.$inject=["$locale"];var Oc=".",Je={yyyy:Y("FullYear",4),yy:Y("FullYear",2,0,!0),y:Y("FullYear",1),MMMM:sb("Month"),MMM:sb("Month",!0),MM:Y("Month",2,1),M:Y("Month",1,1),dd:Y("Date",2),d:Y("Date",1),HH:Y("Hours",2),H:Y("Hours",1),hh:Y("Hours",2,-12),h:Y("Hours",1,-12),mm:Y("Minutes",2),m:Y("Minutes",1),ss:Y("Seconds",2),s:Y("Seconds",1),sss:Y("Milliseconds",3),EEEE:sb("Day"),EEE:sb("Day",!0),
+//# sourceMappingURL=angular.min.js.map
+    // copy from https://github.com/angular/angular.js/blob/master/src/Angular.js
+ * see: https://github.com/angular/angular.js/blob/master/src/ng/directive/select.js#L131
+// Source: module.js
+// Source: affix.js
+// Source: alert.js
+// Source: button.js
+// Source: aside.js
+// Source: datepicker.js
+// Source: date-parser.js
+// Source: debounce.js
+// Source: dimensions.js
+// Source: parse-options.js
+// Source: raf.js
+// Source: dropdown.js
+// Source: modal.js
+// Source: alert.tpl.js
+// Source: aside.tpl.js
+// Source: datepicker.tpl.js
+// Source: dropdown.tpl.js
+// Source: modal.tpl.js
+// Source: popover.tpl.js
+// Source: select.tpl.js
+// Source: tab.tpl.js
+// Source: timepicker.tpl.js
+// Source: tooltip.tpl.js
+// Source: typeahead.tpl.js
+// Source: navbar.js
+// Source: scrollspy.js
+// Source: popover.js
+// Source: select.js
+// Source: tab.js
+// Source: timepicker.js
+// Source: tooltip.js
+// Source: typeahead.js
+01:11:24.295614 IP 172.25.250.9.43414 > 192.168.50.254.http: Flags [P.], seq 3315:3749, ack 153780, win 1881, options [nop,nop,TS val 655067313 ecr 700304505], length 434: HTTP: GET /assets/js/libs/angular/angular-sanitize.js HTTP/1.1
+'...)..yGET /assets/js/libs/angular/angular-sanitize.js HTTP/1.1
+ * (c) 2010-2014 Google, Inc. http://angularjs.org
+ * http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
+   <example module="ngSanitize" deps="angular-sanitize.js">
+   <file name="protractor.js" type="protractor">
+   <example module="ngSanitize" deps="angular-sanitize.js">
+             'http://angularjs.org/,\n'+
+           $scope.snippetWithTarget = 'http://angularjs.org/';
+     <file name="protractor.js" type="protractor">
+             toBe('Pretty text with some links: http://angularjs.org/, us@somewhere.org, ' +
+             toBe('Pretty text with some links: http://angularjs.org/, mailto:us@somewhere.org, ' +
+            toBe('http://angularjs.org/');
+01:11:24.301911 IP 172.25.250.9.43416 > 192.168.50.254.http: Flags [P.], seq 976:1394, ack 137949, win 1357, options [nop,nop,TS val 655067319 ecr 700304522], length 418: HTTP: GET /assets/js/app/utils/md5.js HTTP/1.1
+'...)...GET /assets/js/app/utils/md5.js HTTP/1.1
+01:11:24.303418 IP 172.25.250.9.43414 > 192.168.50.254.http: Flags [P.], seq 3749:4164, ack 175002, win 2229, options [nop,nop,TS val 655067320 ecr 700304523], length 415: HTTP: GET /assets/js/app/module.js HTTP/1.1
+'...)...GET /assets/js/app/module.js HTTP/1.1
+01:11:24.303458 IP 172.25.250.9.43420 > 192.168.50.254.http: Flags [P.], seq 430:852, ack 105958, win 1098, options [nop,nop,TS val 655067321 ecr 700304510], length 422: HTTP: GET /assets/js/app/states/states.js HTTP/1.1
+'...)..~GET /assets/js/app/states/states.js HTTP/1.1
+01:11:24.303489 IP 172.25.250.9.43418 > 192.168.50.254.http: Flags [P.], seq 872:1297, ack 107101, win 1293, options [nop,nop,TS val 655067321 ecr 700304505], length 425: HTTP: GET /assets/js/app/domain/todoitems.js HTTP/1.1
+'...)..yGET /assets/js/app/domain/todoitems.js HTTP/1.1
+01:11:24.303518 IP 172.25.250.9.43422 > 192.168.50.254.http: Flags [P.], seq 438:857, ack 49122, win 996, options [nop,nop,TS val 655067321 ecr 700304510], length 419: HTTP: GET /assets/js/app/ui/filters.js HTTP/1.1
+'...)..~GET /assets/js/app/ui/filters.js HTTP/1.1
+01:11:24.303552 IP 172.25.250.9.43424 > 192.168.50.254.http: Flags [P.], seq 442:859, ack 8732, win 365, options [nop,nop,TS val 655067321 ecr 700304511], length 417: HTTP: GET /assets/js/app/ui/focus.js HTTP/1.1
+'...)...GET /assets/js/app/ui/focus.js HTTP/1.1
+    .factory('todoItems', function(jsonFilter){
+        console.log(jsonFilter(todoItems));
+    // see http://stackoverflow.com/questions/14833326/how-to-set-focus-in-angularjs
+01:11:24.305287 IP 172.25.250.9.43414 > 192.168.50.254.http: Flags [P.], seq 4164:4584, ack 176182, win 2251, options [nop,nop,TS val 655067322 ecr 700304531], length 420: HTTP: GET /assets/js/app/ui/gravatar.js HTTP/1.1
+'...)...GET /assets/js/app/ui/gravatar.js HTTP/1.1
+01:11:24.305322 IP 172.25.250.9.43416 > 192.168.50.254.http: Flags [P.], seq 1394:1814, ack 143617, win 1446, options [nop,nop,TS val 655067322 ecr 700304531], length 420: HTTP: GET /assets/js/app/ui/editable.js HTTP/1.1
+'...)...GET /assets/js/app/ui/editable.js HTTP/1.1
+Accept: application/json, text/plain, */*
+^C265 packets captured
+265 packets received by filter
+0 packets dropped by kernel
+
+[student@workstation ~]$ cd    ~/DO280/labs/network-ingress/
+[student@workstation network-ingress]$ oc create route edge todo-https --service todo-http --hostname todo-https.apps.ocp4.example.com
+route.route.openshift.io/todo-https created
+[student@workstation network-ingress]$ curl https://todo-https.apps.ocp4.example.com
+curl: (60) SSL certificate problem: self signed certificate in certificate chain
+More details here: https://curl.haxx.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+[student@workstation network-ingress]$ oc login -u admin -p redhat
+Login successful.
+
+You have access to 59 projects, the list has been suppressed. You can list all projects with 'oc projects'
+
+Using project "network-ingress".
+[student@workstation network-ingress]$ oc extract secrets/router-ca --keys tls.crt -n openshift-ingress-operator
+tls.crt
+[student@workstation network-ingress]$ curl -I -v --cacert tls.crt https://todo-https.apps.ocp4.example.com/
+*   Trying 192.168.50.254...
+* TCP_NODELAY set
+* Connected to todo-https.apps.ocp4.example.com (192.168.50.254) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: tls.crt
+  CApath: none
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+* TLSv1.3 (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Change cipher spec (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES128-GCM-SHA256
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: CN=*.apps.ocp4.example.com
+*  start date: Aug  5 18:28:25 2020 GMT
+*  expire date: Aug  5 18:28:26 2022 GMT
+*  subjectAltName: host "todo-https.apps.ocp4.example.com" matched cert's "*.apps.ocp4.example.com"
+*  issuer: CN=ingress-operator@1596652102
+*  SSL certificate verify ok.
+> HEAD / HTTP/1.1
+> Host: todo-https.apps.ocp4.example.com
+> User-Agent: curl/7.61.1
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+HTTP/1.1 200 OK
+< server: nginx/1.14.1
+server: nginx/1.14.1
+< date: Wed, 12 May 2021 05:19:17 GMT
+date: Wed, 12 May 2021 05:19:17 GMT
+< content-type: text/html
+content-type: text/html
+< set-cookie: 947acc174fec7aa4880f048abd1ce952=00d137f1a7a5615253f5d4794a5c56d9; path=/; HttpOnly; Secure
+set-cookie: 947acc174fec7aa4880f048abd1ce952=00d137f1a7a5615253f5d4794a5c56d9; path=/; HttpOnly; Secure
+< cache-control: private
+cache-control: private
+
+< 
+* Connection #0 to host todo-https.apps.ocp4.example.com left intact
+[student@workstation network-ingress]$ oc login -u developer -p developer
+Login successful.
+
+You have one project on this server: "network-ingress"
+
+Using project "network-ingress".
+[student@workstation network-ingress]$ oc get svc todo-http -o jsonpath="{.spec.clusterIP}{'\n'}
+> "
+172.30.33.54
+
+[student@workstation network-ingress]$ oc debug -t deployment/todo-http --image registry.access.redhat.com/ubi8/ubi:8.0
+Starting pod/todo-http-debug ...
+Pod IP: 10.10.0.31
+If you don't see a command prompt, try pressing enter.
+sh-4.4$ curl -v 172.30.33.54
+* Rebuilt URL to: 172.30.33.54/
+*   Trying 172.30.33.54...
+* TCP_NODELAY set
+* Connected to 172.30.33.54 (172.30.33.54) port 80 (#0)
+> GET / HTTP/1.1
+> Host: 172.30.33.54
+> User-Agent: curl/7.61.1
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Server: nginx/1.14.1
+< Date: Wed, 12 May 2021 05:24:26 GMT
+< Content-Type: text/html
+< Transfer-Encoding: chunked
+< Connection: keep-alive
+< 
+<!DOCTYPE html>
+<html lang="en" ng-app="todoItemsApp" ng-controller="appCtl">
+<head>
+    <meta charset="utf-8">
+    <title>ToDo app</title>
+
+    <link rel="stylesheet" href="assets/css/libs/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="assets/css/libs/angular-motion/angular-motion.css">
+    <link rel="stylesheet" href="assets/css/libs/angular-xeditable/xeditable.css">
+
+    <link rel="stylesheet" href="assets/css/app.css">
+
+    <script type="text/javascript" src="assets/js/libs/jquery/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="assets/js/libs/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="assets/js/libs/angular/angular.min.js"></script>
+
+    <script type="text/javascript" src="assets/js/libs/angular/angular-route.min.js"></script>
+    <script type="text/javascript" src="assets/js/libs/angular/angular-animate.min.js"></script>
+
+    <script type="text/javascript" src="assets/js/libs/angular-ui-router/angular-ui-router.js"></script>
+
+    <script type="text/javascript" src="assets/js/libs/angular-strap/angular-strap.js"></script>
+    <script type="text/javascript" src="assets/js/libs/angular-strap/angular-strap.tpl.js"></script>
+    <script type="text/javascript" src="assets/js/libs/angular-xeditable/xeditable.js"></script>
+
+    <script type="text/javascript" src="assets/js/libs/angular/angular-sanitize.js"></script>
+    <script type="text/javascript" src="assets/js/app/utils/md5.js"></script>
+
+    <script type="text/javascript" src="assets/js/app/module.js"></script>
+    <script type="text/javascript" src="assets/js/app/states/states.js"></script>
+
+    <script type="text/javascript" src="assets/js/app/domain/todoitems.js"></script>
+    <script type="text/javascript" src="assets/js/app/ui/filters.js"></script>
+
+    <script type="text/javascript" src="assets/js/app/ui/focus.js"></script>
+    <script type="text/javascript" src="assets/js/app/ui/gravatar.js"></script>
+    <script type="text/javascript" src="assets/js/app/ui/editable.js"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-default" role="navigation">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#nav-toggle">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">ToDo App</a>
+    </div>
+    <div class="collapse navbar-collapse" id="nav-toggle">
+        <ul class="nav navbar-nav">
+            <li ui-sref-active="active"><a ui-sref="list">Browse</a></li>
+            <li ui-sref-active="active"><a ui-sref="create">Create</a></li>
+        </ul>
+        <form class="navbar-form navbar-right" role="search">
+            <input type="text" class="form-control" placeholder="Search" ng-model="search.description" ng-keyup="startSearch()">
+        </form>
+    </div>
+
+</nav>
+<div class="container">
+    <div ui-view></div>
+</div>
+
+</body>
+* Connection #0 to host 172.30.33.54 left intact
+</html>sh-4.4$ 
+sh-4.4$ exit
+exit
+
+Removing debug pod ...
+[student@workstation network-ingress]$ oc delete route todo-https
+route.route.openshift.io "todo-https" deleted
+[student@workstation network-ingress]$ cd certs
+[student@workstation certs]$ ls
+openssl-commands.txt  training-CA.key  training.ext
+passphrase.txt        training-CA.pem
+[student@workstation certs]$ ls -l
+total 20
+-rw-rw-r--. 1 student student  566 Nov  6  2020 openssl-commands.txt
+-rw-rw-r--. 1 student student   33 May 12 01:01 passphrase.txt
+-rw-------. 1 student student 1743 May 12 01:01 training-CA.key
+-rw-r--r--. 1 student student 1334 May 12 01:01 training-CA.pem
+-rw-r--r--. 1 student student  352 May 12 01:01 training.ext
+[student@workstation certs]$ openssl genrsa -out training.key 2048
+Generating RSA private key, 2048 bit long modulus (2 primes)
+...............+++++
+....................+++++
+e is 65537 (0x010001)
+[student@workstation certs]$ openssl req -new -subj "/C=US/ST=Nort Carolina/L=Raleigh/O=Red Hat/ CN=todo-https.apps.oc4.example" -key training.key -out training.csr
+req: Skipping unknown attribute " CN"
+[student@workstation certs]$ openssl req -new -subj "/C=US/ST=Nort Carolina/L=Raleigh/O=Red Hat/CN=todo-https.apps.oc4.example" -key training.key -out training.csr
+[student@workstation certs]$ openssl req -new -subj "/C=US/ST=Nort Carolina/L=Raleigh/O=Red Hat/CN=todo-https.apps.oc4.example" -key training.key -out training.csr^C
+[student@workstation certs]$ openssl X509 -req -in training.csr -passin file:passphrage.txt -CA training-CA.pem -CAkey training-CA.key -CAcreateserial -out training.crt -days 1825 -sha256 -extfile training.ext
+Invalid command 'X509'; type "help" for a list.
+[student@workstation certs]$ openssl x509 -req -in training.csr -passin file:passphrage.txt -CA training-CA.pem -CAkey training-CA.key -CAcreateserial -out training.crt -days 1825 -sha256 -extfile training.ext
+Can't open file passphrage.txt
+Error getting password
+[student@workstation certs]$ openssl x509 -req -in training.csr -passin file:passphrase.txt -CA training-CA.pem -CAkey training-CA.key -CAcreateserial -out training.crt -days 1825 -sha256 -extfile training.ext
+Signature ok
+subject=C = US, ST = Nort Carolina, L = Raleigh, O = Red Hat, CN = todo-https.apps.oc4.example
+Getting CA Private Key
+[student@workstation certs]$ ls
+openssl-commands.txt  training-CA.pem  training.csr
+passphrase.txt        training-CA.srl  training.ext
+training-CA.key       training.crt     training.key
+[student@workstation certs]$ ls
+openssl-commands.txt  training-CA.pem  training.csr
+passphrase.txt        training-CA.srl  training.ext
+training-CA.key       training.crt     training.key
+[student@workstation certs]$ cd    ~/DO280/labs/network-ingress/
+[student@workstation network-ingress]$ oc create secret tls todo-certs --certs certs/tranining.crt --key certs/traning.ley
+Error: unknown flag: --certs
+See 'oc create secret tls --help' for usage.
+[student@workstation network-ingress]$ oc create secret tls todo-certs --cert certs/tranining.crt --key certs/traning.ley
+error: Cannot read file certs/tranining.crt, open certs/tranining.crt: no such file or directory
+[student@workstation network-ingress]$ oc create secret tls todo-certs --cert certs/training.crt --key certs/traning.ley
+error: Cannot read file certs/traning.ley, open certs/traning.ley: no such file or directory
+[student@workstation network-ingress]$ oc create secret tls todo-certs --cert certs/training.crt --key certs/training.ley
+error: Cannot read file certs/training.ley, open certs/training.ley: no such file or directory
+[student@workstation network-ingress]$ oc create secret tls todo-certs --cert certs/training.crt --key certs/training.key
+secret/todo-certs created
+[student@workstation network-ingress]$ ls todo-app-v2.yaml 
+todo-app-v2.yaml
+[student@workstation network-ingress]$ ls todo-app*
+todo-app-v1.yaml  todo-app-v2.yaml
+[student@workstation network-ingress]$ less todo-app-v2.yaml 
+[student@workstation network-ingress]$ oc create -f  todo-app-v2.yaml 
+deployment.apps/todo-https created
+service/todo-https created
+[student@workstation network-ingress]$ oc get pods
+NAME                          READY   STATUS              RESTARTS   AGE
+todo-http-59446d7885-7gfpq    1/1     Running             0          32m
+todo-https-85bff5b996-q64qf   0/1     ContainerCreating   0          5s
+[student@workstation network-ingress]$ oc describe pod
+Name:         todo-http-59446d7885-7gfpq
+Namespace:    network-ingress
+Priority:     0
+Node:         master02/192.168.50.11
+Start Time:   Wed, 12 May 2021 01:06:03 -0400
+Labels:       app=todo-http
+              name=todo-http
+              pod-template-hash=59446d7885
+Annotations:  k8s.v1.cni.cncf.io/network-status:
+                [{
+                    "name": "openshift-sdn",
+                    "interface": "eth0",
+                    "ips": [
+                        "10.8.0.12"
+                    ],
+                    "default": true,
+                    "dns": {}
+                }]
+              k8s.v1.cni.cncf.io/networks-status:
+                [{
+                    "name": "openshift-sdn",
+                    "interface": "eth0",
+                    "ips": [
+                        "10.8.0.12"
+                    ],
+                    "default": true,
+                    "dns": {}
+                }]
+              openshift.io/scc: restricted
+Status:       Running
+IP:           10.8.0.12
+IPs:
+  IP:           10.8.0.12
+Controlled By:  ReplicaSet/todo-http-59446d7885
+Containers:
+  todo-http:
+    Container ID:   cri-o://e5ec9e4d1cc66edab879a5c85380e565646fd5ab48a7b80fd4811d0c8b536b45
+    Image:          quay.io/redhattraining/todo-angular:v1.1
+    Image ID:       quay.io/redhattraining/todo-angular@sha256:85a6d143977e80a274b31839d477e529339545b97832f45318cd9ae8d3049899
+    Port:           8080/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Wed, 12 May 2021 01:06:17 -0400
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      cpu:  500m
+    Requests:
+      cpu:        500m
+    Environment:  <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-5mrg7 (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  default-token-5mrg7:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-5mrg7
+    Optional:    false
+QoS Class:       Burstable
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/memory-pressure:NoSchedule
+                 node.kubernetes.io/not-ready:NoExecute for 300s
+                 node.kubernetes.io/unreachable:NoExecute for 300s
+Events:
+  Type    Reason          Age   From               Message
+  ----    ------          ----  ----               -------
+  Normal  Scheduled       32m   default-scheduler  Successfully assigned network-ingress/todo-http-59446d7885-7gfpq to master02
+  Normal  AddedInterface  32m   multus             Add eth0 [10.8.0.12/23]
+  Normal  Pulling         32m   kubelet, master02  Pulling image "quay.io/redhattraining/todo-angular:v1.1"
+  Normal  Pulled          32m   kubelet, master02  Successfully pulled image "quay.io/redhattraining/todo-angular:v1.1"
+  Normal  Created         32m   kubelet, master02  Created container todo-http
+  Normal  Started         32m   kubelet, master02  Started container todo-http
+
+
+Name:           todo-https-85bff5b996-q64qf
+Namespace:      network-ingress
+Priority:       0
+Node:           master01/192.168.50.10
+Start Time:     Wed, 12 May 2021 01:38:25 -0400
+Labels:         app=todo-https
+                name=todo-https
+                pod-template-hash=85bff5b996
+Annotations:    k8s.v1.cni.cncf.io/network-status:
+                  [{
+                      "name": "openshift-sdn",
+                      "interface": "eth0",
+                      "ips": [
+                          "10.10.0.32"
+                      ],
+                      "default": true,
+                      "dns": {}
+                  }]
+                k8s.v1.cni.cncf.io/networks-status:
+                  [{
+                      "name": "openshift-sdn",
+                      "interface": "eth0",
+                      "ips": [
+                          "10.10.0.32"
+                      ],
+                      "default": true,
+                      "dns": {}
+                  }]
+                openshift.io/scc: restricted
+Status:         Pending
+IP:             
+IPs:            <none>
+Controlled By:  ReplicaSet/todo-https-85bff5b996
+Containers:
+  todo-https:
+    Container ID:   
+    Image:          quay.io/redhattraining/todo-angular:v1.2
+    Image ID:       
+    Ports:          8080/TCP, 8443/TCP
+    Host Ports:     0/TCP, 0/TCP
+    State:          Waiting
+      Reason:       ContainerCreating
+    Ready:          False
+    Restart Count:  0
+    Limits:
+      cpu:  500m
+    Requests:
+      cpu:        500m
+    Environment:  <none>
+    Mounts:
+      /usr/local/etc/ssl/certs from tls-certs (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-5mrg7 (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             False 
+  ContainersReady   False 
+  PodScheduled      True 
+Volumes:
+  tls-certs:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  todo-certs
+    Optional:    false
+  default-token-5mrg7:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-5mrg7
+    Optional:    false
+QoS Class:       Burstable
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/memory-pressure:NoSchedule
+                 node.kubernetes.io/not-ready:NoExecute for 300s
+                 node.kubernetes.io/unreachable:NoExecute for 300s
+Events:
+  Type    Reason          Age   From               Message
+  ----    ------          ----  ----               -------
+  Normal  Scheduled       13s   default-scheduler  Successfully assigned network-ingress/todo-https-85bff5b996-q64qf to master01
+  Normal  AddedInterface  11s   multus             Add eth0 [10.10.0.32/23]
+  Normal  Pulling         10s   kubelet, master01  Pulling image "quay.io/redhattraining/todo-angular:v1.2"
+[student@workstation network-ingress]$ oc get pods
+NAME                          READY   STATUS    RESTARTS   AGE
+todo-http-59446d7885-7gfpq    1/1     Running   0          33m
+todo-https-85bff5b996-q64qf   1/1     Running   0          58s
+[student@workstation network-ingress]$ oc describe pod todo-https-85bff5b996-q64qf
+Name:         todo-https-85bff5b996-q64qf
+Namespace:    network-ingress
+Priority:     0
+Node:         master01/192.168.50.10
+Start Time:   Wed, 12 May 2021 01:38:25 -0400
+Labels:       app=todo-https
+              name=todo-https
+              pod-template-hash=85bff5b996
+Annotations:  k8s.v1.cni.cncf.io/network-status:
+                [{
+                    "name": "openshift-sdn",
+                    "interface": "eth0",
+                    "ips": [
+                        "10.10.0.32"
+                    ],
+                    "default": true,
+                    "dns": {}
+                }]
+              k8s.v1.cni.cncf.io/networks-status:
+                [{
+                    "name": "openshift-sdn",
+                    "interface": "eth0",
+                    "ips": [
+                        "10.10.0.32"
+                    ],
+                    "default": true,
+                    "dns": {}
+                }]
+              openshift.io/scc: restricted
+Status:       Running
+IP:           10.10.0.32
+IPs:
+  IP:           10.10.0.32
+Controlled By:  ReplicaSet/todo-https-85bff5b996
+Containers:
+  todo-https:
+    Container ID:   cri-o://1e9182e756281f91867119e2451110f8d7c4c7a4889249b1e1200f0bca1ffef3
+    Image:          quay.io/redhattraining/todo-angular:v1.2
+    Image ID:       quay.io/redhattraining/todo-angular@sha256:4da0657631ea97c3c93d14592500e129eb61efafa4a60ac13939f8e615a8a0d0
+    Ports:          8080/TCP, 8443/TCP
+    Host Ports:     0/TCP, 0/TCP
+    State:          Running
+      Started:      Wed, 12 May 2021 01:38:39 -0400
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      cpu:  500m
+    Requests:
+      cpu:        500m
+    Environment:  <none>
+    Mounts:
+      /usr/local/etc/ssl/certs from tls-certs (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-5mrg7 (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  tls-certs:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  todo-certs
+    Optional:    false
+  default-token-5mrg7:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-5mrg7
+    Optional:    false
+QoS Class:       Burstable
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/memory-pressure:NoSchedule
+                 node.kubernetes.io/not-ready:NoExecute for 300s
+                 node.kubernetes.io/unreachable:NoExecute for 300s
+Events:
+  Type    Reason          Age   From               Message
+  ----    ------          ----  ----               -------
+  Normal  Scheduled       68s   default-scheduler  Successfully assigned network-ingress/todo-https-85bff5b996-q64qf to master01
+  Normal  AddedInterface  66s   multus             Add eth0 [10.10.0.32/23]
+  Normal  Pulling         65s   kubelet, master01  Pulling image "quay.io/redhattraining/todo-angular:v1.2"
+  Normal  Pulled          54s   kubelet, master01  Successfully pulled image "quay.io/redhattraining/todo-angular:v1.2"
+  Normal  Created         54s   kubelet, master01  Created container todo-https
+  Normal  Started         54s   kubelet, master01  Started container todo-https
+[student@workstation network-ingress]$ oc describe pod todo-https-85bff5b996-q64qf |less
+[student@workstation network-ingress]$ oc describe pod todo-https-85bff5b996-q64qf |less
+[student@workstation network-ingress]$ oc create route passthrough todo-https --service todo-https --port 8443 --hostname todo-https.apps.ocp4.example.com
+route.route.openshift.io/todo-https created
+[student@workstation network-ingress]$ curl -vvI --cacert certs/training-CA.pem   https://todo-https.apps.ocp4.example.com/
+*   Trying 192.168.50.254...
+* TCP_NODELAY set
+* Connected to todo-https.apps.ocp4.example.com (192.168.50.254) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: certs/training-CA.pem
+  CApath: none
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+* TLSv1.3 (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Change cipher spec (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ALPN, server accepted to use h2
+* Server certificate:
+*  subject: C=US; ST=Nort Carolina; L=Raleigh; O=Red Hat; CN=todo-https.apps.oc4.example
+*  start date: May 12 05:33:49 2021 GMT
+*  expire date: May 11 05:33:49 2026 GMT
+*  subjectAltName: host "todo-https.apps.ocp4.example.com" matched cert's "*.apps.ocp4.example.com"
+*  issuer: C=US; ST=North Carolina; L=Raleigh; O=Red Hat; CN=ocp4.example.com
+*  SSL certificate verify ok.
+* Using HTTP2, server supports multi-use
+* Connection state changed (HTTP/2 confirmed)
+* Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+* Using Stream ID: 1 (easy handle 0x5619fd7cd740)
+> HEAD / HTTP/2
+> Host: todo-https.apps.ocp4.example.com
+> User-Agent: curl/7.61.1
+> Accept: */*
+> 
+* Connection state changed (MAX_CONCURRENT_STREAMS == 128)!
+< HTTP/2 200 
+HTTP/2 200 
+< server: nginx/1.14.1
+server: nginx/1.14.1
+< date: Wed, 12 May 2021 05:43:17 GMT
+date: Wed, 12 May 2021 05:43:17 GMT
+< content-type: text/html
+content-type: text/html
+< content-length: 3017
+content-length: 3017
+< last-modified: Thu, 28 Nov 2019 19:53:20 GMT
+last-modified: Thu, 28 Nov 2019 19:53:20 GMT
+< etag: "5de025b0-bc9"
+etag: "5de025b0-bc9"
+< strict-transport-security: max-age=63072000; includeSubdomains
+strict-transport-security: max-age=63072000; includeSubdomains
+< x-frame-options: DENY
+x-frame-options: DENY
+< x-content-type-options: nosniff
+x-content-type-options: nosniff
+< accept-ranges: bytes
+accept-ranges: bytes
+
+< 
+* Connection #0 to host todo-https.apps.ocp4.example.com left intact
+[student@workstation network-ingress]$ curl -vvI --cacert certs/training-CA.pem   https://todo-https.apps.ocp4.example.com/  |less
+[student@workstation network-ingress]$ curl -vvI --cacert certs/training-CA.pem   https://todo-https.apps.ocp4.example.com/  |less
+[student@workstation network-ingress]$ curl -vvI --cacert certs/training-CA.pem   https://todo-https.apps.ocp4.example.com/  |less
+[student@workstation network-ingress]$ curl -vvI --cacert certs/training-CA.pem   https://todo-https.apps.ocp4.example.com/  |less
+[student@workstation network-ingress]$ curl -vvI --cacert certs/training-CA.pem   https://todo-https.apps.ocp4.example.com/  |less
+[student@workstation network-ingress]$ curl -vvI --cacert certs/training-CA.pem   https://todo-https.apps.ocp4.example.com/  |less
+[student@workstation network-ingress]$ curl -vvI --cacert certs/training-CA.pem   https://todo-https.apps.ocp4.example.com/  |less
+[student@workstation network-ingress]$ 
+(failed reverse-i-search)`oc createq': ^C create route passthrough todo-https --service todo-https --port 8443 --hostname todo-https.apps.ocp4.example.com
+[student@workstation network-ingress]$ oc get pods
+NAME                          READY   STATUS    RESTARTS   AGE
+todo-http-59446d7885-7gfpq    1/1     Running   0          42m
+todo-https-85bff5b996-q64qf   1/1     Running   0          9m38s
+[student@workstation network-ingress]$ oc describe pod todo-https-85bff5b996-q64qf
+Name:         todo-https-85bff5b996-q64qf
+Namespace:    network-ingress
+Priority:     0
+Node:         master01/192.168.50.10
+Start Time:   Wed, 12 May 2021 01:38:25 -0400
+Labels:       app=todo-https
+              name=todo-https
+              pod-template-hash=85bff5b996
+Annotations:  k8s.v1.cni.cncf.io/network-status:
+                [{
+                    "name": "openshift-sdn",
+                    "interface": "eth0",
+                    "ips": [
+                        "10.10.0.32"
+                    ],
+                    "default": true,
+                    "dns": {}
+                }]
+              k8s.v1.cni.cncf.io/networks-status:
+                [{
+                    "name": "openshift-sdn",
+                    "interface": "eth0",
+                    "ips": [
+                        "10.10.0.32"
+                    ],
+                    "default": true,
+                    "dns": {}
+                }]
+              openshift.io/scc: restricted
+Status:       Running
+IP:           10.10.0.32
+IPs:
+  IP:           10.10.0.32
+Controlled By:  ReplicaSet/todo-https-85bff5b996
+Containers:
+  todo-https:
+    Container ID:   cri-o://1e9182e756281f91867119e2451110f8d7c4c7a4889249b1e1200f0bca1ffef3
+    Image:          quay.io/redhattraining/todo-angular:v1.2
+    Image ID:       quay.io/redhattraining/todo-angular@sha256:4da0657631ea97c3c93d14592500e129eb61efafa4a60ac13939f8e615a8a0d0
+    Ports:          8080/TCP, 8443/TCP
+    Host Ports:     0/TCP, 0/TCP
+    State:          Running
+      Started:      Wed, 12 May 2021 01:38:39 -0400
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      cpu:  500m
+    Requests:
+      cpu:        500m
+    Environment:  <none>
+    Mounts:
+      /usr/local/etc/ssl/certs from tls-certs (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-5mrg7 (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  tls-certs:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  todo-certs
+    Optional:    false
+  default-token-5mrg7:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-5mrg7
+    Optional:    false
+QoS Class:       Burstable
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/memory-pressure:NoSchedule
+                 node.kubernetes.io/not-ready:NoExecute for 300s
+                 node.kubernetes.io/unreachable:NoExecute for 300s
+Events:
+  Type    Reason          Age    From               Message
+  ----    ------          ----   ----               -------
+  Normal  Scheduled       9m53s  default-scheduler  Successfully assigned network-ingress/todo-https-85bff5b996-q64qf to master01
+  Normal  AddedInterface  9m51s  multus             Add eth0 [10.10.0.32/23]
+  Normal  Pulling         9m50s  kubelet, master01  Pulling image "quay.io/redhattraining/todo-angular:v1.2"
+  Normal  Pulled          9m39s  kubelet, master01  Successfully pulled image "quay.io/redhattraining/todo-angular:v1.2"
+  Normal  Created         9m39s  kubelet, master01  Created container todo-https
+  Normal  Started         9m39s  kubelet, master01  Started container todo-https
+[student@workstation network-ingress]$ oc describe pod todo-https-85bff5b996-q64qf |less
+[student@workstation network-ingress]$ oc describe pod todo-https-85bff5b996-q64qf |grep Mounts
+    Mounts:
+[student@workstation network-ingress]$ oc describe pod todo-https-85bff5b996-q64qf |grep Mounts -A2
+    Mounts:
+      /usr/local/etc/ssl/certs from tls-certs (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-5mrg7 (ro)
+[student@workstation network-ingress]$ ls /usr/local/etc/ssl/certs
+ls: cannot access '/usr/local/etc/ssl/certs': No such file or directory
+[student@workstation network-ingress]$ 
+

@@ -1,0 +1,4 @@
+htpasswd -b   ~/DO280/labs/auth-review/tmp_users  tester  'L@bR3v!ew'
+htpasswd -b   ~/DO280/labs/auth-review/tmp_users  admin  'L@bR3v!ew'
+htpasswd -b   ~/DO280/labs/auth-review/tmp_users  leader  'L@bR3v!ew'
+htpasswd -b   ~/DO280/labs/auth-review/tmp_users  developer  'L@bR3v!ew'

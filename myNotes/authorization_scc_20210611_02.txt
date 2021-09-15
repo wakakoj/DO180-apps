@@ -1,0 +1,287 @@
+Fri Jun 11 01:40:20 EDT 2021
+
+
+[student@workstation ~]$ oc new-app --name gitlab --docker-image quay.io/redhattraining/gitlab-ce:8.4.3-ce.0
+--> Found container image a26371b (5 years old) from quay.io for "quay.io/redhattraining/gitlab-ce:8.4.3-ce.0"
+
+    * An image stream tag will be created as "gitlab:8.4.3-ce.0" that will track this image
+
+--> Creating resources ...
+    imagestream.image.openshift.io "gitlab" created
+    deployment.apps "gitlab" created
+    service "gitlab" created
+--> Success
+    Application is not exposed. You can expose services to the outside world by executing one or more of the commands below:
+     'oc expose svc/gitlab' 
+    Run 'oc status' to view your app.
+[student@workstation ~]$ 
+
+
+
+[student@workstation ~]$ oc get pods
+NAME                      READY   STATUS             RESTARTS   AGE
+gitlab-559f9d6f77-kn5lb   0/1     CrashLoopBackOff   4          2m36s
+[student@workstation ~]$ oc get pod/gitlab-559f9d6f77-kn5lb  -o yaml | oc adm policy scc-subject-review -f -
+RESOURCE                      ALLOWED BY   
+Pod/gitlab-559f9d6f77-kn5lb   anyuid       
+[student@workstation ~]$ 
+
+
+
+[student@workstation ~]$ oc create sa gitlab-sa
+Error from server (AlreadyExists): serviceaccounts "gitlab-sa" already exists
+[student@workstation ~]$ oc ad^C
+(reverse-i-search)`oc adm po': oc get pod/gitlab-559f9d6f77-kn5lb  -o yaml | ^C adm policy scc-subject-review -f -
+[student@workstation ~]$ oc adm policy add-scc-to-user anyuid -z gitlab-sa
+clusterrole.rbac.authorization.k8s.io/system:openshift:scc:anyuid added: "gitlab-sa"
+[student@workstation ~]$ oc login -u developer -p developer
+Login successful.
+
+You have one project on this server: "authorization-scc"
+
+Using project "authorization-scc".
+[student@workstation ~]$ oc set serviceaccount deployment/gitlab gitlab-sa
+deployment.apps/gitlab serviceaccount updated
+[student@workstation ~]$ oc get pods
+NAME                      READY   STATUS              RESTARTS   AGE
+gitlab-559f9d6f77-kn5lb   0/1     CrashLoopBackOff    6          7m11s
+gitlab-7bb4dcc895-r5fqx   0/1     ContainerCreating   0          7s
+[student@workstation ~]$ oc get pods
+NAME                      READY   STATUS    RESTARTS   AGE
+gitlab-7bb4dcc895-r5fqx   1/1     Running   0          4m30s
+
+
+
+
+
+[student@workstation ~]$ oc login -u developer -p developer
+Login successful.
+
+You have one project on this server: "authorization-scc"
+
+Using project "authorization-scc".
+[student@workstation ~]$ oc set serviceaccount deployment/gitlab gitlab-sa
+deployment.apps/gitlab serviceaccount updated
+[student@workstation ~]$ oc get pods
+NAME                      READY   STATUS              RESTARTS   AGE
+gitlab-559f9d6f77-kn5lb   0/1     CrashLoopBackOff    6          7m11s
+gitlab-7bb4dcc895-r5fqx   0/1     ContainerCreating   0          7s
+[student@workstation ~]$ oc get pods
+NAME                      READY   STATUS    RESTARTS   AGE
+gitlab-7bb4dcc895-r5fqx   1/1     Running   0          4m30s
+[student@workstation ~]$ oc expose service/gitlab --port 80 --hostname gitlab.apps.oc4.example.com
+route.route.openshift.io/gitlab exposed
+[student@workstation ~]$ oc get routes
+NAME     HOST/PORT                     PATH   SERVICES   PORT   TERMINATION   WILDCARD
+gitlab   gitlab.apps.oc4.example.com          gitlab     80                   None
+[student@workstation ~]$ curl -s http://gitlab.apps.oc4.example.com/users/sign_in |grep '<title>' 
+[student@workstation ~]$ curl -s http://gitlab.apps.oc4.example.com/users/sign_in 
+[student@workstation ~]$ oc delete route gitlab
+route.route.openshift.io "gitlab" deleted
+[student@workstation ~]$ oc expose service/gitlab --port 80 --hostname gitlab.apps.ocp4.example.com
+route.route.openshift.io/gitlab exposed
+[student@workstation ~]$ oc get routes
+NAME     HOST/PORT                      PATH   SERVICES   PORT   TERMINATION   WILDCARD
+gitlab   gitlab.apps.ocp4.example.com          gitlab     80                   None
+[student@workstation ~]$ curl -s http://gitlab.apps.ocp4.example.com/users/sign_in 
+<!DOCTYPE html>
+<html lang='en'>
+<head prefix='og: http://ogp.me/ns#'>
+<meta charset='utf-8'>
+<meta content='IE=edge' http-equiv='X-UA-Compatible'>
+<meta content='object' property='og:type'>
+<meta content='GitLab' property='og:site_name'>
+<meta content='Sign in' property='og:title'>
+<meta content='GitLab Community Edition' property='og:description'>
+<meta content='http://gitlab.apps.ocp4.example.com/assets/gitlab_logo-f94735ed1486ec1e35ce78e4c1747b4d.png' property='og:image'>
+<meta content='http://gitlab.apps.ocp4.example.com/users/sign_in' property='og:url'>
+<meta content='summary' property='twitter:card'>
+<meta content='Sign in' property='twitter:title'>
+<meta content='GitLab Community Edition' property='twitter:description'>
+<meta content='http://gitlab.apps.ocp4.example.com/assets/gitlab_logo-f94735ed1486ec1e35ce78e4c1747b4d.png' property='twitter:image'>
+
+<title>Sign in · GitLab</title>
+<meta content='GitLab Community Edition' name='description'>
+<link rel="shortcut icon" type="image/x-icon" href="/assets/favicon-0037f4682f7f2d45973338aad43f3d54.ico" />
+<link rel="stylesheet" media="all" href="/assets/application-2c778293d25fd107e6a97ac0cdf49cd0.css" />
+<link rel="stylesheet" media="print" href="/assets/print-2cb1262fb60ceb73f2fe76fd1a61dccf.css" />
+<script src="/assets/application-140004440b5557ee3118431b2d8c76cb.js"></script>
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="CuvkgsgFI6LEdivo2I5+ow7gha4J3p5BenFYcXBBZ7A8IEhCn8jxVb0hg5j0dvhz6a6w8jj+oBi3/J4GlAr3Pg==" />
+<script>
+//<![CDATA[
+window.gon={};gon.api_version="v3";gon.default_avatar_url="http://gitlab-7bb4dcc895-r5fqx/assets/no_avatar-0801eb7ed213327da2a534095a75b248.png";gon.default_issues_tracker="gitlab";gon.max_file_size=10;gon.relative_url_root="";gon.user_color_scheme="white";
+//]]>
+</script>
+<meta content='origin-when-cross-origin' name='referrer'>
+<meta content='width=device-width, initial-scale=1, maximum-scale=1' name='viewport'>
+<meta content='#474D57' name='theme-color'>
+<link rel="apple-touch-icon" type="image/x-icon" href="/assets/touch-icon-iphone-c2b181d197c3b7be4f8ac381458895bb.png" />
+<link rel="apple-touch-icon" type="image/x-icon" href="/assets/touch-icon-ipad-fede15aef7610235936a27957400503a.png" sizes="76x76" />
+<link rel="apple-touch-icon" type="image/x-icon" href="/assets/touch-icon-iphone-retina-88529dea2f9320df1a3cc45d92e86147.png" sizes="120x120" />
+<link rel="apple-touch-icon" type="image/x-icon" href="/assets/touch-icon-ipad-retina-c0dbda7e71802ee480f6d666da4b834a.png" sizes="152x152" />
+<meta content='/assets/msapplication-tile-2efcb14bec26fd879dd1914db581f8f9.png' name='msapplication-TileImage'>
+<meta content='#30353E' name='msapplication-TileColor'>
+
+
+
+
+<style>
+  [data-user-is] {
+    display: none !important;
+  }
+  
+  [data-user-is=""] {
+    display: block !important;
+  }
+  
+  [data-user-is=""][data-display="inline"] {
+    display: inline !important;
+  }
+  
+  [data-user-is-not] {
+    display: block !important;
+  }
+  
+  [data-user-is-not][data-display="inline"] {
+    display: inline !important;
+  }
+  
+  [data-user-is-not=""] {
+    display: none !important;
+  }
+</style>
+
+</head>
+
+<body class='ui_charcoal login-page application navless'>
+<header class='navbar navbar-fixed-top navbar-empty'>
+<div class='container'>
+<div class='center-logo'>
+<svg width="36px" height="36px" viewBox="0 0 210 210" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="tanuki-logo">
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="logo" sketch:type="MSLayerGroup" transform="translate(0.000000, 10.000000)">
+            <g id="Page-1" sketch:type="MSShapeGroup">
+                <g id="Fill-1-+-Group-24">
+                    <g id="Group-24">
+                        <g id="Group">
+                            <path id="tanuki-right-ear"   d="M12.2685,74.7342 L66.4215,74.7342 L43.1485,3.1092 C41.9515,-0.5768 36.7375,-0.5758 35.5405,3.1092 L12.2685,74.7342 L12.2685,74.7342 Z" fill="#E24329" class="tanuki-shape"></path>
+                            <path id="tanuki-right-cheek" d="M12.2685,74.7341 L12.2685,74.7341 L0.5265,110.8731 C-0.5445,114.1691 0.6285,117.7801 3.4325,119.8171 L105.0615,193.6551 L12.2685,74.7341 L12.2685,74.7341 Z" fill="#FCA326" class="tanuki-shape"></path>
+                            <path id="tanuki-right-eye"   d="M105.0614,193.6548 L66.4214,74.7338 L12.2684,74.7338 L105.0614,193.6548 L105.0614,193.6548 Z" fill="#FC6D26" class="tanuki-shape"></path>
+                            <path id="tanuki-nose"        d="M105.0614,193.655 L105.0614,193.655 L143.7014,74.734 L66.4214,74.734 L105.0614,193.655 L105.0614,193.655 Z" fill="#E24329" class="tanuki-shape"></path>
+                            <path id="tanuki-left-eye"    d="M105.0614,193.6548 L143.7014,74.7338 L197.8544,74.7338 L105.0614,193.6548 L105.0614,193.6548 Z" fill="#FC6D26" class="tanuki-shape"></path>
+                            <path id="tanuki-left-cheek"  d="M197.8544,74.7341 L197.8544,74.7341 L209.5964,110.8731 C210.6674,114.1691 209.4944,117.7801 206.6904,119.8171 L105.0614,193.6551 L197.8544,74.7341 L197.8544,74.7341 Z" fill="#FCA326" class="tanuki-shape"></path>
+                            <path id="tanuki-left-ear"    d="M197.8544,74.7342 L143.7014,74.7342 L166.9744,3.1092 C168.1714,-0.5768 173.3854,-0.5758 174.5824,3.1092 L197.8544,74.7342 L197.8544,74.7342 Z" fill="#E24329" class="tanuki-shape"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
+
+</div>
+</div>
+</header>
+
+
+
+<div class='container navless-container'>
+<div class='content'>
+<div class='flash-container'>
+</div>
+
+<div class='row'>
+<div class='col-sm-5 pull-right'>
+<div>
+<div class='login-box'>
+<div class='login-heading'>
+<h3>Existing user? Sign in</h3>
+</div>
+<div class='login-body'>
+<form class="new_user" id="new_user" action="/users/sign_in" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="RvViRE7VC9cRwQPvWerWjxMQ9aDv9KnpZulaRkd2RkVwPs6EGRjZIGiWq591ElBf9F7A/N7Ul7CrZJwxoz3Wyw==" /><input class="form-control top" placeholder="Username or Email" autofocus="autofocus" autocapitalize="off" autocorrect="off" type="text" name="user[login]" id="user_login" />
+<input class="form-control bottom" placeholder="Password" type="password" name="user[password]" id="user_password" />
+<div class='remember-me checkbox'>
+<label for='user_remember_me'>
+<input name="user[remember_me]" type="hidden" value="0" /><input type="checkbox" value="1" name="user[remember_me]" id="user_remember_me" />
+<span>Remember me</span>
+</label>
+<div class='pull-right'>
+<a href="/users/password/new">Forgot your password?</a>
+</div>
+</div>
+<div>
+<input type="submit" name="commit" value="Sign in" class="btn btn-save" />
+</div>
+</form>
+
+</div>
+</div>
+
+<div class='prepend-top-20'>
+<div class='login-box'>
+<div class='login-heading'>
+<h3>New user? Create an account</h3>
+</div>
+<div class='login-body'>
+<form class="new_user" id="new_user" action="/users" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="ulZNHXTomgkCgZDSZLM/3QMWWtOsMf8jg8Cv0CVs+LiMneHdIyVI/nvWOKJIS7kN5Fhvj50RwXpOTWmnwSdoNg==" /><div class='devise-errors'>
+
+</div>
+<div>
+<input class="form-control top" placeholder="Name" required="required" type="text" name="user[name]" id="user_name" />
+</div>
+<div>
+<input class="form-control middle" placeholder="Username" required="required" type="text" name="user[username]" id="user_username" />
+</div>
+<div>
+<input class="form-control middle" placeholder="Email" required="required" type="email" name="user[email]" id="user_email" />
+</div>
+<div class='form-group append-bottom-20' id='password-strength'>
+<input class="form-control bottom" id="user_password_sign_up" placeholder="Password" required="required" type="password" name="user[password]" />
+</div>
+<div></div>
+<div>
+<input type="submit" name="commit" value="Sign up" class="btn-create btn" />
+</div>
+</form>
+</div>
+</div>
+<div class='clearfix prepend-top-20'>
+<p>
+<span class='light'>Didn't receive a confirmation email?</span>
+<a href="/users/confirmation/new">Request a new one</a>.
+</p>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class='col-sm-7 brand-holder pull-left'>
+<h1>
+GitLab Community Edition
+</h1>
+<h3>Open source software to collaborate on code</h3>
+<p>
+Manage git repositories with fine grained access controls that keep your code secure.
+Perform code reviews and enhance collaboration with merge requests.
+Each project can also have an issue tracker and a wiki.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+<div class='container'>
+<div class='footer-links'>
+<a href="/explore">Explore</a>
+<a href="/help">Help</a>
+<a href="https://about.gitlab.com/">About GitLab</a>
+</div>
+</div>
+</body>
+</html>
+[student@workstation ~]$ curl -s http://gitlab.apps.ocp4.example.com/users/sign_in  |grep '<title>'
+<title>Sign in · GitLab</title>
+[student@workstation ~]$ 
+

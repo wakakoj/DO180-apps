@@ -1,0 +1,76 @@
+[student@workstation ~]$ oc login -u kubeadmin -p ${RHT_OCP4_KUBEADM_PASSWD}  https://api.ocp4.example.com:6443
+Login failed (401 Unauthorized)
+Verify you have provided correct credentials.
+[student@workstation ~]$ oc login -u developer -p developer  https://api.ocp4.example.com:6443
+Login successful.
+
+You don't have any projects. You can try to create a new project, by running
+
+    oc new-project <projectname>
+
+[student@workstation ~]$ ping api.ocp4.example.com
+PING api.ocp4.example.com (192.168.50.254) 56(84) bytes of data.
+64 bytes from 192.168.50.254 (192.168.50.254): icmp_seq=1 ttl=64 time=0.631 ms
+64 bytes from 192.168.50.254 (192.168.50.254): icmp_seq=2 ttl=64 time=0.283 ms
+64 bytes from 192.168.50.254 (192.168.50.254): icmp_seq=3 ttl=64 time=0.291 ms
+^C
+--- api.ocp4.example.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 29ms
+rtt min/avg/max/mdev = 0.283/0.401/0.631/0.163 ms
+[student@workstation ~]$ traceroute api.ocp4.example.com
+traceroute to api.ocp4.example.com (192.168.50.254), 30 hops max, 60 byte packets
+ 1  192.168.50.254 (192.168.50.254)  0.592 ms !X  0.901 ms !X  0.883 ms !X
+[student@workstation ~]$ ip -a 
+Usage: ip [ OPTIONS ] OBJECT { COMMAND | help }
+       ip [ -force ] -batch filename
+where  OBJECT := { link | address | addrlabel | route | rule | neigh | ntable |
+                   tunnel | tuntap | maddress | mroute | mrule | monitor | xfrm |
+                   netns | l2tp | fou | macsec | tcp_metrics | token | netconf | ila |
+                   vrf | sr | nexthop }
+       OPTIONS := { -V[ersion] | -s[tatistics] | -d[etails] | -r[esolve] |
+                    -h[uman-readable] | -iec | -j[son] | -p[retty] |
+                    -f[amily] { inet | inet6 | mpls | bridge | link } |
+                    -4 | -6 | -I | -D | -M | -B | -0 |
+                    -l[oops] { maximum-addr-flush-attempts } | -br[ief] |
+                    -o[neline] | -t[imestamp] | -ts[hort] | -b[atch] [filename] |
+                    -rc[vbuf] [size] | -n[etns] name | -N[umeric] | -a[ll] |
+                    -c[olor]}
+[student@workstation ~]$ ip netns
+
+
+Fri Jun 11 01:20:02 EDT 2021
+
+
+oc new-app --name giblab --docker-image quay.io/redhattraining/gitlab-ce:8.4.3-ce.0
+
+
+[student@workstation ~]$ oc get pods
+NAME                     READY   STATUS              RESTARTS   AGE
+giblab-c96b68dd5-sggfn   0/1     ContainerCreating   0          14s
+[student@workstation ~]$ oc get pods
+NAME                     READY   STATUS              RESTARTS   AGE
+giblab-c96b68dd5-sggfn   0/1     ContainerCreating   0          26s
+[student@workstation ~]$ oc get pods
+NAME                     READY   STATUS              RESTARTS   AGE
+giblab-c96b68dd5-sggfn   0/1     ContainerCreating   0          30s
+[student@workstation ~]$ oc get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+giblab-c96b68dd5-sggfn   1/1     Running   0          43s
+[student@workstation ~]$ oc get pods
+NAME                     READY   STATUS   RESTARTS   AGE
+giblab-c96b68dd5-sggfn   0/1     Error    1          56s
+[student@workstation ~]$ oc get pods
+NAME                     READY   STATUS   RESTARTS   AGE
+giblab-c96b68dd5-sggfn   0/1     Error    1          62s
+[student@workstation ~]$ oc get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+giblab-c96b68dd5-sggfn   1/1     Running   2          65s
+[student@workstation ~]$ oc get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+giblab-c96b68dd5-sggfn   1/1     Running   2          67s
+[student@workstation ~]$ oc get pods
+NAME                     READY   STATUS   RESTARTS   AGE
+giblab-c96b68dd5-sggfn   0/1     Error    2          75s
+
+
+

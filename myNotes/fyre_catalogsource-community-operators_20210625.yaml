@@ -1,0 +1,97 @@
+﻿apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  annotations:
+    operatorframework.io/managed-by: marketplace-operator
+  selfLink: >-
+    /apis/operators.coreos.com/v1alpha1/namespaces/openshift-marketplace/catalogsources/community-operators
+  resourceVersion: '91404856'
+  name: community-operators
+  uid: f98b246e-1584-430e-97b9-9fc14162b06d
+  creationTimestamp: '2021-02-18T12:36:47Z'
+  generation: 3
+  managedFields:
+    - apiVersion: operators.coreos.com/v1alpha1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            .: {}
+            'f:operatorframework.io/managed-by': {}
+          'f:labels':
+            .: {}
+            'f:olm-visibility': {}
+            'f:openshift-marketplace': {}
+            'f:opsrc-datastore': {}
+            'f:opsrc-provider': {}
+        'f:spec':
+          .: {}
+          'f:displayName': {}
+          'f:icon':
+            .: {}
+            'f:base64data': {}
+            'f:mediatype': {}
+          'f:image': {}
+          'f:publisher': {}
+          'f:sourceType': {}
+          'f:updateStrategy':
+            .: {}
+            'f:registryPoll': {}
+      manager: marketplace-operator
+      operation: Update
+      time: '2021-05-14T04:41:04Z'
+    - apiVersion: operators.coreos.com/v1alpha1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          'f:updateStrategy':
+            'f:registryPoll':
+              'f:interval': {}
+        'f:status':
+          .: {}
+          'f:connectionState':
+            .: {}
+            'f:address': {}
+            'f:lastConnect': {}
+            'f:lastObservedState': {}
+          'f:latestImageRegistryPoll': {}
+          'f:registryService':
+            .: {}
+            'f:createdAt': {}
+            'f:port': {}
+            'f:protocol': {}
+            'f:serviceName': {}
+            'f:serviceNamespace': {}
+      manager: catalog
+      operation: Update
+      time: '2021-06-25T08:05:35Z'
+  namespace: openshift-marketplace
+  labels:
+    olm-visibility: hidden
+    openshift-marketplace: 'true'
+    opsrc-datastore: 'true'
+    opsrc-provider: community
+spec:
+  displayName: Community Operators
+  icon:
+    base64data: ''
+    mediatype: ''
+  image: 'registry.redhat.io/redhat/community-operator-index:v4.6'
+  priority: -400
+  publisher: Red Hat
+  sourceType: grpc
+  updateStrategy:
+    registryPoll:
+      interval: 60m0s
+status:
+  connectionState:
+    address: 'community-operators.openshift-marketplace.svc:50051'
+    lastConnect: '2021-06-24T22:49:16Z'
+    lastObservedState: READY
+  latestImageRegistryPoll: '2021-06-25T08:05:24Z'
+  registryService:
+    createdAt: '2021-06-02T05:36:55Z'
+    port: '50051'
+    protocol: grpc
+    serviceName: community-operators
+    serviceNamespace: openshift-marketplace
